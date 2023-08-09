@@ -1,0 +1,12 @@
+.timeline-card{
+    width: 50%;
+    margin: 2% 0;
+    height: 80vh;
+    overflow-y: scroll !important;
+}
+
+.comment-style{
+    list-style: circle;
+    color: var(--primary);
+    font-weight: bold;
+}

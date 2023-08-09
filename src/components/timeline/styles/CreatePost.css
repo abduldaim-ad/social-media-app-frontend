@@ -1,0 +1,49 @@
+.post-div{
+    width: 50%;
+    background-color: var(--primary);
+    padding: 2%;
+    margin: auto;
+    margin-top: 3%;
+    border-radius: 5%;
+}
+
+.input-style{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: center;
+    font-size: 20px;
+    padding: 1%;
+    font-family: 'arial';
+}
+
+.text-area{
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    padding: 1%;
+    font-family: 'arial';
+    resize: none;
+}
+
+.text-area-div{
+    position: relative;
+    width: 100%;
+}
+
+.create-btn{
+    margin: 2% !important;
+    float: right;
+
+    position: absolute;
+    top: 0;
+    right: 0px;
+    z-index: 2;
+    border: none;
+    top: 2px;
+    cursor: pointer;
+    color: var(--primary);
+    transform: translateX(2px);
+}

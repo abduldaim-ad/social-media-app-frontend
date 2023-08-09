@@ -1,0 +1,35 @@
+.nav-links{
+    margin: 0;
+    padding: 1%;
+    box-shadow: 2px 2px 2px 2px var(--secondary); 
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: var(--primary);
+}
+
+.link{
+    text-decoration: none;
+    margin: 0% 2%;
+}
+
+.btn-style{
+    width: 6rem !important;
+    padding: 1% 5%;
+    color: var(--white) !important;
+    font-weight: bold !important;
+}
+
+.btn-style:hover{
+    color:var(--black) !important;
+    border:none !important;
+    box-shadow: none;
+}
+
+.right-btn{
+    /* display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end; */
+    /* float: right; */
+}

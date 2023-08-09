@@ -1,0 +1,35 @@
+.cover-div{
+    width: 96%;
+    height: 40vh;
+    background-color: grey;
+    background-image: url('https://e1.pxfuel.com/desktop-wallpaper/481/340/desktop-wallpaper-backgrounds-of-widescreen-nature-with-quotes-for-facebook-cover-page-fb-cover.jpg');
+    box-shadow: 2px 2px 2px 2px var(--grey);
+    padding: 2%;
+}
+
+.profile-div{
+    position: relative;
+    color: var(--white);
+    width: 20%;
+    background-image: radial-gradient(blue, green, blue);
+    /* background-image: url('https://e0.pxfuel.com/wallpapers/983/800/desktop-wallpaper-cute-profile-pics-smile-t.jpg'); */
+    border: 3px solid var(--white);
+    object-fit:cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    border-radius: 60%;
+    box-shadow: 3px 3px 3px 3px var(--grey);
+}
+
+.card-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.recent-heading{
+    text-align: center;
+    color: var(--primary);
+    text-shadow: 1px 1px var(--grey);
+}

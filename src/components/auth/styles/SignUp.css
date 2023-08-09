@@ -1,0 +1,36 @@
+.heading{
+    text-align: center;
+    color: var(--black);
+}
+
+.btn{
+    width:50% !important;
+    margin: 3% auto !important;
+    color:var(--white) !important;
+    background-color: var(--black) !important;
+}
+
+.link-style{
+    text-align: center;
+}
+
+.main-div{
+    margin: 1% auto !important;
+    background-color:var(--primary);
+    width:20%;
+    height: 60vh;
+    margin:auto;
+    padding: 4rem;
+    border: 2px solid var(--black);
+    box-shadow: 2px 2px 2px 2px var(--grey);
+    border-radius: 5%;
+}
+
+.inner-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.tf{
+    margin:2% !important;
+}
