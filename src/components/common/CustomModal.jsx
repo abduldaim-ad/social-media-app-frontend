@@ -21,7 +21,7 @@ const style = {
 
 const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc }) => {
     const handleCloseModal = () => setOpenModal(false);
-    console.log(openModal)
+
     return (
         <Modal
             open={openModal}

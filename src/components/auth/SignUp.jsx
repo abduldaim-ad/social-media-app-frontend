@@ -31,7 +31,6 @@ const SignUp = () => {
             [name]: value
         })
 
-        console.log("This value: ", value)
     }
 
     const isValidEmail = (email) => {

@@ -12,10 +12,10 @@ const TimelineCard = ({ postId, title, desc, handleOpenModal }) => {
 
     const token = localStorage.getItem("userToken");
 
-    const [comments, setComments] = useState([])
+    const [comments, setComments] = useState([{}])
 
     const [readMoreDesc, setReadMoreDesc] = useState(desc?.slice(0, 150))
-    const [readMoreComments, setReadMoreComments] = useState(desc?.slice(0, 150))
+    const [endSubset, setEndSubset] = useState(1)
     const [show, setShow] = useState("Show More")
 
     useEffect(() => {
@@ -30,7 +30,6 @@ const TimelineCard = ({ postId, title, desc, handleOpenModal }) => {
 
         axios.request(config)
             .then((response) => {
-                console.log("This test", JSON.stringify(response.data))
                 setComments(response.data)
             })
             .catch((error) => {
@@ -42,13 +41,16 @@ const TimelineCard = ({ postId, title, desc, handleOpenModal }) => {
         if (show === "Show More") {
             setReadMoreDesc(desc);
             setShow("Show Less");
-            setReadMoreComments(comments.slice(0, 1))
+            setEndSubset(comments.length)
         }
         else {
             setReadMoreDesc(desc?.slice(0, 150));
             setShow("Show More");
+            setEndSubset(1)
         }
     }
+
+    const subsetComments = comments.slice(0, endSubset)
 
     return (
         <Card sx={{ maxWidth: 425 }} className='timeline-card'>
@@ -70,7 +72,7 @@ const TimelineCard = ({ postId, title, desc, handleOpenModal }) => {
             </CardActionArea>
             <ul className='comment-style'>
                 {
-                    Array.isArray(comments) && comments.length > 0 && comments.map((comment) => {
+                    Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments?.map((comment) => {
                         const { commentText } = comment;
                         return (
                             <li>{commentText}</li>

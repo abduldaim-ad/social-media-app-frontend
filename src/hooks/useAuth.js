@@ -7,7 +7,7 @@ const useAuth = () => {
     useEffect(() => {
         const token = localStorage.getItem('userToken');
         const user = localStorage.getItem('userData');
-        console.log('test', token, user)
+
         if (token && user) {
             setToken(token);
             setUser(user);

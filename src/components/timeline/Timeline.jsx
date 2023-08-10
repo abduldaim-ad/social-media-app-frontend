@@ -38,7 +38,6 @@ const Timeline = () => {
 
         axios.request(config)
             .then((response) => {
-                console.log("Posts", JSON.stringify(response.data));
                 setAllPosts(response.data)
             })
             .catch((error) => {
@@ -79,7 +78,6 @@ const Timeline = () => {
 
         axios.request(config)
             .then((response) => {
-                console.log(JSON.stringify(response.data));
                 setOpen(true)
                 setMessage(response.data.msg)
                 setSeverityVal("success")
@@ -107,7 +105,6 @@ const Timeline = () => {
             <div className='all-posts-div'>
                 {
                     Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed().map((post) => {
-                        console.log(post)
                         const { _id, title, desc } = post;
                         return (
                             <>

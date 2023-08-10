@@ -28,14 +28,12 @@ const LogIn = ({ setLocal }) => {
             [name]: value
         })
 
-        console.log("This value: ", value)
     }
 
     const handleClickLogIn = () => {
-        // setLogInData({});
+
         const { email, password } = logInData;
-        console.log("Email: ", email)
-        console.log("Password: ", password)
+
         if (!email || !password) {
             setOpen(true)
             setMessage("Please Fill All the Fields!")
@@ -59,12 +57,10 @@ const LogIn = ({ setLocal }) => {
 
             axios.request(config)
                 .then((response) => {
-                    console.log(JSON.stringify(response.data));
                     setOpen(true)
                     setMessage(response.data.msg)
                     localStorage.setItem("userToken", response.data.token)
                     localStorage.setItem("userData", JSON.stringify(response.data.user))
-                    console.log(response.data)
                     setSeverityVal("success")
                     setLocal(true)
                     navigate('/')

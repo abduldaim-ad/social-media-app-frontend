@@ -11,7 +11,9 @@ export const FetchData = async (url, jwt, method, body) => {
         }
     };
 
-    if (method !== 'get' && method !== 'Get' && method !== 'GET') {
+    if (method !== 'get' && method !== 'Get' && method !== 'GET' !==
+        method !== 'delete' && method !== 'Delete' && method !== 'DELETE'
+    ) {
         config.data = body;
     }
 

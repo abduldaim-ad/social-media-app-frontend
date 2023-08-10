@@ -17,10 +17,14 @@ const Profile = () => {
     const [openModal, setOpenModal] = useState(false);
 
     const token = localStorage.getItem("userToken");
+    const user = JSON.parse(localStorage.getItem("userData"));
 
-    const { user } = useAuth();
+    const { _id } = user;
+    const userId = _id;
 
-    console.log('user ==>', user)
+    // const { user } = useAuth();
+
+    // console.log("UserTest", user)
 
     const handleGetUserPost = async () => {
         const url = 'http://localhost:5000/getuserposts';
@@ -51,11 +55,9 @@ const Profile = () => {
             <div className='card-div'>
                 {
                     myPosts.toReversed().map((myPost) => {
-                        const { title, desc } = myPost
+                        const { _id, title, desc } = myPost
                         return (
-                            <div onClick={() => handleOpenModal(title, desc)}>
-                                <CustomCard title={title} desc={desc} />
-                            </div>
+                            <CustomCard userId={userId} postId={_id} title={title} desc={desc} handleGetUserPost={handleGetUserPost} />
                         )
                     })
                 }
