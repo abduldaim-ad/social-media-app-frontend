@@ -1,8 +1,9 @@
 .timeline-card{
-    width: 50%;
-    margin: 2% 0;
-    height: 80vh;
-    overflow-y: scroll !important;
+    margin: 0;
+}
+
+.post-card-style{
+    width:48%;
 }
 
 .comment-style{

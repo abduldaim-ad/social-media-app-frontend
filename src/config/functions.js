@@ -20,7 +20,7 @@ export const FetchData = async (url, jwt, method, body) => {
     try {
         const response = await axios.request(config);
         return response;
-    } catch (error) {
-        return error;
+    } catch ({ response }) {
+        return response.data;
     }
 }

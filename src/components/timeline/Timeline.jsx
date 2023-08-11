@@ -4,7 +4,8 @@ import axios from 'axios'
 import CustomAlert from '../common/CustomAlert'
 import CreatePost from './CreatePost'
 import CustomModal from '../common/CustomModal'
-import TimelineCard from './TimelineCard'
+import PostTimeline from './PostTimeline'
+import { FetchData } from '../../config/functions'
 
 const Timeline = () => {
 
@@ -59,37 +60,33 @@ const Timeline = () => {
         setDesc(descRef.current.value)
     }
 
-    const handleCreatePost = () => {
-        let data = JSON.stringify({
-            title,
-            desc
-        });
-
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: 'http://localhost:5000/createpost',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            data: data
-        };
-
-        axios.request(config)
-            .then((response) => {
+    const handleCreatePost = async () => {
+        if (!title || !desc) {
+            setOpen(true)
+            setMessage("Please Fill All the Fields!")
+            setSeverityVal("error")
+            return;
+        }
+        else {
+            const url = 'http://localhost:5000/createpost';
+            let body = JSON.stringify({
+                title,
+                desc
+            });
+            const response = await FetchData(url, token, 'POST', body);
+            if (response && response.data) {
                 setOpen(true)
                 setMessage(response.data.msg)
                 setSeverityVal("success")
                 setTitle("")
                 setDesc("")
-            })
-            .catch((error) => {
-                console.log(error);
+            }
+            else {
                 setOpen(true)
-                setMessage(error.response.data.err)
+                setMessage(response.err)
                 setSeverityVal("error")
-            });
+            }
+        }
     }
 
     return (
@@ -108,14 +105,35 @@ const Timeline = () => {
                         const { _id, title, desc } = post;
                         return (
                             <>
-                                <TimelineCard postId={_id} title={title} desc={desc} handleOpenModal={handleOpenModal} />
+                                <PostTimeline
+                                    postId={_id}
+                                    title={title}
+                                    desc={desc}
+                                    handleOpenModal={handleOpenModal}
+                                />
                             </>
                         )
                     })
                 }
             </div>
-            <CustomModal openModal={openModal} setOpenModal={setOpenModal} modalTitle={modalTitle} modalDesc={modalDesc} />
-            {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}
+
+            <CustomModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                modalTitle={modalTitle}
+                modalDesc={modalDesc}
+            />
+
+            {
+                open
+                &&
+                <CustomAlert
+                    open={open}
+                    setOpen={setOpen}
+                    severityVal={severityVal}
+                    message={message}
+                />
+            }
         </>
     )
 }
