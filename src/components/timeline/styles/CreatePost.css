@@ -3,8 +3,7 @@
     background-color: var(--primary);
     box-shadow: 2px 2px 2px 2px var(--light-grey);
     padding: 0.5%;
-    margin: auto;
-    margin-top: 3%;
+    margin: 2% auto;
 }
 
 .input-style{

@@ -1,11 +1,15 @@
 .nav-links{
     margin: 0;
     padding: 1%;
+    width: 100%;
     box-shadow: 2px 2px 2px 2px var(--light-grey);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     background-color: var(--primary);
+    position: fixed;
+    top: 0;
+    z-index: 50;
 }
 
 .link{

@@ -1,3 +1,13 @@
 .card-style{
     margin: 1% 0;
+    box-shadow: 1px 1px 1px 1px var(--grey) !important;
+    border-radius: 5% !important;
+}
+
+.del-icon{
+    color: var(--primary);
+}
+
+.del-icon:hover{
+    color: var(--black);
 }

@@ -8,6 +8,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--white);
+  padding-top: 70px !important;
+  overflow: hidden;
 }
 
 :root {
@@ -23,7 +25,7 @@ body {
 .scrollbar
 {
 	float: left;
-	height: 90vh;
+	height: 95vh;
   margin: 1% 1%;
 	background: var(--smoke-white);
 	overflow-y: auto;
@@ -51,7 +53,6 @@ body {
 #style-4::-webkit-scrollbar-thumb
 {
 	background-color: var(--grey);
-  border-radius: 25%;
 }
 
 code {

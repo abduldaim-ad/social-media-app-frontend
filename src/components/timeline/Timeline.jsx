@@ -26,25 +26,23 @@ const Timeline = () => {
     const descRef = useRef()
 
     const token = localStorage.getItem("userToken")
+    const user = JSON.parse(localStorage.getItem("userData"))
+    const userId = user._id;
 
-    useEffect(() => {
-        let config = {
-            method: 'get',
-            maxBodyLength: Infinity,
-            url: 'http://localhost:5000/getallposts',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        };
+    const handleGetUserPost = async () => {
 
-        axios.request(config)
-            .then((response) => {
-                setAllPosts(response.data)
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [])
+        const url = 'http://localhost:5000/getallposts';
+        const response = await FetchData(url, token, 'GET', null)
+
+        if (response && response.data) {
+            setAllPosts(response.data)
+        }
+        else {
+            setOpen(true)
+            setMessage(response.err)
+            setSeverityVal("error")
+        }
+    }
 
     const handleOpenModal = (title, desc) => {
         setModalTitle(title)
@@ -89,6 +87,12 @@ const Timeline = () => {
         }
     }
 
+
+    useEffect(() => {
+        handleGetUserPost()
+    }, [])
+
+
     return (
         <>
             <CreatePost
@@ -102,14 +106,17 @@ const Timeline = () => {
             <div className='all-posts-div'>
                 {
                     Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed().map((post) => {
-                        const { _id, title, desc } = post;
+                        const { _id, title, desc, createdBy } = post;
                         return (
                             <>
                                 <PostTimeline
+                                    userId={userId}
                                     postId={_id}
                                     title={title}
                                     desc={desc}
+                                    postedBy={createdBy}
                                     handleOpenModal={handleOpenModal}
+                                    handleGetUserPost={handleGetUserPost}
                                 />
                             </>
                         )

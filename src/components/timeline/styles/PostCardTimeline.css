@@ -1,0 +1,7 @@
+.del-icon{
+    color: var(--primary);
+}
+
+.del-icon:hover{
+    color: var(--black);
+}

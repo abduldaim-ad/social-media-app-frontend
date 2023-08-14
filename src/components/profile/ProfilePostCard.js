@@ -15,12 +15,14 @@ import MyComment from '../common/MyComment';
 const ProfilePostCard =
     ({ userId, postId, title, desc, handleGetUserPost,
         handleOpenModal, setOpenConfirm, setSelectedId,
-        open, setOpen, message, severityVal }) => {
+        open, setOpen, message, severityVal, postedBy }) => {
 
         const [readMoreDesc, setReadMoreDesc] = useState(desc?.slice(0, 150))
         const [show, setShow] = useState("Show More")
         const [comments, setComments] = useState([{}])
         const [endSubset, setEndSubset] = useState(1)
+
+        const [username, setUsername] = useState("")
 
         // const { token } = useAuth()
 
@@ -39,6 +41,14 @@ const ProfilePostCard =
             }
         }
 
+        const getUsername = async () => {
+            const url = `http://localhost:5000/getusername/${postedBy}`
+            const response = await FetchData(url, token, 'GET', null)
+            if (response && response.data) {
+                setUsername(response.data.username)
+            }
+        }
+
         const handleGetUserPostComments = async () => {
             const url = `http://localhost:5000/getuserpostcomments/${userId}/${postId}`
             const response = await FetchData(url, token, 'GET', null)
@@ -54,6 +64,7 @@ const ProfilePostCard =
 
         useEffect(() => {
             handleGetUserPostComments();
+            getUsername();
         }, [])
 
         const subsetComments = comments.slice(0, endSubset)
@@ -70,8 +81,11 @@ const ProfilePostCard =
                                 alt="profile post"
                                 onClick={() => handleOpenModal(title, desc)}
                             />
-                            <DeleteIcon style={{ float: "right" }} onClick={() => handleConfirmDelete()} />
+                            <DeleteIcon className='del-icon' style={{ float: "right" }} onClick={() => handleConfirmDelete()} />
                             <CardContent>
+                                <Typography gutterBottom variant="h5" component="div">
+                                    {username}'s Post
+                                </Typography>
                                 <Typography gutterBottom variant="h5" component="div">
                                     {title}
                                 </Typography>

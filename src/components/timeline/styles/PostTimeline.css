@@ -4,10 +4,22 @@
 
 .post-card-style{
     width:48%;
+    box-shadow: 2px 2px 2px 2px var(--grey);
+    border-radius: 3%;
 }
 
 .comment-style{
-    list-style: circle;
-    color: var(--primary);
+    list-style:none;
     font-weight: bold;
+    font-size: 14px;
+}
+
+.name-style{
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.name-style:hover{
+    text-decoration: underline;
 }

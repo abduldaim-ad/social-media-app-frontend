@@ -84,7 +84,7 @@ const Profile = () => {
             <div className='card-div'>
                 {
                     myPosts.toReversed().map((myPost) => {
-                        const { _id, title, desc } = myPost
+                        const { _id, title, desc, createdBy } = myPost
                         return (
                             <ProfilePostCard
                                 userId={userId}
@@ -95,6 +95,7 @@ const Profile = () => {
                                 handleOpenModal={handleOpenModal}
                                 setOpenConfirm={setOpenConfirm}
                                 setSelectedId={setSelectedId}
+                                postedBy={createdBy}
                                 open={open}
                                 setOpen={setOpen}
                                 message={message}
