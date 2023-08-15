@@ -12,21 +12,22 @@ import ConfirmationDialog from '../common/ConfirmationDialog';
 import CustomAlert from '../common/CustomAlert';
 
 const PostTimeline = ({ userId, postId, postedBy, title, desc,
-    handleGetUserPost, handleOpenModal }) => {
+    handleGetUserPost, handleOpenModal, setOpenUpdateModal, setUpdatePostId,
+    setUpdatePostTitle, setUpdatePostDesc }) => {
 
     const token = localStorage.getItem("userToken");
 
-    const [comments, setComments] = useState([{}])
+    const [comments, setComments] = useState([])
 
-    const [readMoreDesc, setReadMoreDesc] = useState(desc?.slice(0, 150))
+    const [readMoreDesc, setReadMoreDesc] = useState('');
     const [endSubset, setEndSubset] = useState(1)
     const [show, setShow] = useState("Show More")
+    const [showDesc, setShowDesc] = useState(" ... show more")
 
     const [openConfirm, setOpenConfirm] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
 
     const [username, setUsername] = useState("")
-    const [commentPostedBy, setCommentPostedBy] = useState("")
 
     const [open, setOpen] = useState(false);
 
@@ -58,14 +59,23 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
         }
     }
 
+    const handleDescLength = () => {
+        if (showDesc === " ... show more") {
+            setReadMoreDesc(desc);
+            setShowDesc(" show less");
+        }
+        else {
+            setReadMoreDesc(desc?.slice(0, 150));
+            setShowDesc(" ... show more");
+        }
+    }
+
     const handleTextLength = () => {
         if (show === "Show More") {
-            setReadMoreDesc(desc);
             setShow("Show Less");
             setEndSubset(comments.length)
         }
         else {
-            setReadMoreDesc(desc?.slice(0, 150));
             setShow("Show More");
             setEndSubset(1)
         }
@@ -88,11 +98,18 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
     }
 
     useEffect(() => {
+        if (desc) {
+            let val = desc?.slice(0, 150) || '';
+            setReadMoreDesc(val)
+        }
+    }, [desc])
+
+    useEffect(() => {
         handleGetPostComments();
         getUsername()
     }, [])
 
-    const subsetComments = comments.slice(0, endSubset)
+    const subsetComments = comments.toReversed().slice(0, endSubset)
 
     return (
         <>
@@ -108,16 +125,22 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                     setOpenConfirm={setOpenConfirm}
                     readMoreDesc={readMoreDesc}
                     handleOpenModal={handleOpenModal}
+                    handleDescLength={handleDescLength}
+                    showDesc={showDesc}
+                    setOpenUpdateModal={setOpenUpdateModal}
+                    setUpdatePostId={setUpdatePostId}
+                    setUpdatePostTitle={setUpdatePostTitle}
+                    setUpdatePostDesc={setUpdatePostDesc}
                 />
                 <MyComment userId={userId} postId={postId} setComments={setComments} />
                 <Card sx={{ maxWidth: "100%" }} className='timeline-card'>
                     <ul className='comment-style'>
                         {
-                            Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments?.map((comment) => {
-                                const { commentText } = comment;
+                            Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments.toReversed()?.map((comment) => {
+                                const { commentText, username } = comment;
                                 return (
                                     <Typography variant="caption" display="block" gutterBottom>
-                                        <li><strong className='name-style'>{'username'}:</strong> {commentText}</li>
+                                        <li style={{ fontWeight: "bolder" }}><strong className='name-style'>{username}:</strong> {commentText}</li>
                                     </Typography>
                                 )
                             })
@@ -125,7 +148,7 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                     </ul>
 
                     <CardActions>
-                        <Button size="small" color="primary" onClick={() => handleTextLength()}>
+                        <Button size="small" color="primary" style={{ textTransform: "lowercase", visibility: (comments.length > 1) ? "visible" : "hidden" }} onClick={() => handleTextLength()}>
                             {show}
                         </Button>
                     </CardActions>

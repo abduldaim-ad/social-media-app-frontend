@@ -6,10 +6,11 @@ import CreatePost from './CreatePost'
 import CustomModal from '../common/CustomModal'
 import PostTimeline from './PostTimeline'
 import { FetchData } from '../../config/functions'
+import UpdateModal from '../common/UpdateModal';
 
 const Timeline = () => {
 
-    const [allPosts, setAllPosts] = useState([{}])
+    const [allPosts, setAllPosts] = useState([])
     const [title, setTitle] = useState("")
     const [desc, setDesc] = useState("")
 
@@ -22,6 +23,13 @@ const Timeline = () => {
 
     const [openModal, setOpenModal] = useState(false);
 
+    const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+    const [updatePostId, setUpdatePostId] = useState("");
+    const [updatePostTitle, setUpdatePostTitle] = useState("");
+    const [updatePostDesc, setUpdatePostDesc] = useState("");
+    const [flag, setFlag] = useState(false);
+
     const titleRef = useRef()
     const descRef = useRef()
 
@@ -33,7 +41,6 @@ const Timeline = () => {
 
         const url = 'http://localhost:5000/getallposts';
         const response = await FetchData(url, token, 'GET', null)
-
         if (response && response.data) {
             setAllPosts(response.data)
         }
@@ -87,16 +94,16 @@ const Timeline = () => {
         }
     }
 
-
     useEffect(() => {
-        handleGetUserPost()
-    }, [])
+        handleGetUserPost();
+    }, [flag])
 
 
     return (
         <>
             <CreatePost
-                title={title} desc={desc}
+                title={title}
+                desc={desc}
                 handleTitleChange={handleTitleChange}
                 handleDescChange={handleDescChange}
                 handleCreatePost={handleCreatePost}
@@ -105,7 +112,7 @@ const Timeline = () => {
             />
             <div className='all-posts-div'>
                 {
-                    Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed().map((post) => {
+                    Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed()?.map((post) => {
                         const { _id, title, desc, createdBy } = post;
                         return (
                             <>
@@ -117,12 +124,34 @@ const Timeline = () => {
                                     postedBy={createdBy}
                                     handleOpenModal={handleOpenModal}
                                     handleGetUserPost={handleGetUserPost}
+                                    setOpenUpdateModal={setOpenUpdateModal}
+                                    setUpdatePostId={setUpdatePostId}
+                                    setUpdatePostTitle={setUpdatePostTitle}
+                                    setUpdatePostDesc={setUpdatePostDesc}
                                 />
                             </>
                         )
                     })
                 }
             </div>
+
+            {
+                openUpdateModal
+                &&
+                <UpdateModal
+                    openUpdateModal={openUpdateModal}
+                    setOpenUpdateModal={setOpenUpdateModal}
+                    postId={updatePostId}
+                    title={updatePostTitle}
+                    desc={updatePostDesc}
+                    setOpen={setOpen}
+                    setFlag={setFlag}
+                    flag={flag}
+                    setSeverityVal={setSeverityVal}
+                    setMessage={setMessage}
+                    getPosts={handleGetUserPost}
+                />
+            }
 
             <CustomModal
                 openModal={openModal}

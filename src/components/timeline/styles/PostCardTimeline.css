@@ -5,3 +5,12 @@
 .del-icon:hover{
     color: var(--black);
 }
+
+.read-more{
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+.read-more:hover{
+    color: var(--primary);
+}

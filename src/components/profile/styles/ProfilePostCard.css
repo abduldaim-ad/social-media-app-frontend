@@ -11,3 +11,9 @@
 .del-icon:hover{
     color: var(--black);
 }
+
+.name-style{
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 16px;
+}

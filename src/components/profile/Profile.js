@@ -3,13 +3,13 @@ import './styles/Profile.css'
 import ProfilePostCard from './ProfilePostCard'
 import CustomModal from '../common/CustomModal';
 import { FetchData } from '../../config/functions';
-
+import UpdateModal from '../common/UpdateModal';
 import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 
 const Profile = () => {
 
-    const [myPosts, setMyPosts] = useState([{}])
+    const [myPosts, setMyPosts] = useState([])
 
     const [modalTitle, setModalTitle] = useState("")
     const [modalDesc, setModalDesc] = useState("")
@@ -19,9 +19,17 @@ const Profile = () => {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
 
+    const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+    const [flag, setFlag] = useState(false);
+
     const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState("")
-    const [severityVal, setSeverityVal] = useState("")
+    const [message, setMessage] = useState("");
+    const [severityVal, setSeverityVal] = useState("");
+
+    const [updatePostId, setUpdatePostId] = useState("");
+    const [updatePostTitle, setUpdatePostTitle] = useState("");
+    const [updatePostDesc, setUpdatePostDesc] = useState("");
 
     // const handleOpen111 = (id) => {
     //     setSelected((prev) => id)
@@ -48,7 +56,7 @@ const Profile = () => {
 
     useEffect(() => {
         handleGetUserPost();
-    }, [])
+    }, [flag])
 
     const handleDeletePost = async () => {
         const url = `http://localhost:5000/deletepost/${selectedId}`
@@ -100,11 +108,33 @@ const Profile = () => {
                                 setOpen={setOpen}
                                 message={message}
                                 severityVal={severityVal}
+                                setOpenUpdateModal={setOpenUpdateModal}
+                                setUpdatePostId={setUpdatePostId}
+                                setUpdatePostTitle={setUpdatePostTitle}
+                                setUpdatePostDesc={setUpdatePostDesc}
                             />
                         )
                     })
                 }
             </div>
+
+            {
+                openUpdateModal
+                &&
+                <UpdateModal
+                    openUpdateModal={openUpdateModal}
+                    setOpenUpdateModal={setOpenUpdateModal}
+                    postId={updatePostId}
+                    title={updatePostTitle}
+                    desc={updatePostDesc}
+                    setOpen={setOpen}
+                    setFlag={setFlag}
+                    flag={flag}
+                    setSeverityVal={setSeverityVal}
+                    setMessage={setMessage}
+                    getPosts={handleGetUserPost}
+                />
+            }
 
             <CustomModal
                 openModal={openModal}

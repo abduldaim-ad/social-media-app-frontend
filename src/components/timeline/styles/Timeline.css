@@ -40,3 +40,10 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+@media screen and (max-width:500px) {
+    .all-posts-div{
+        width:90vw;
+    flex-direction: column;
+    }
+}

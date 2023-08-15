@@ -20,7 +20,7 @@ const CreatePost = ({ title, desc, handleTitleChange, handleDescChange, handleCr
                     <textarea
                         name=""
                         id=""
-                        cols="80"
+                        // cols="80"
                         rows="2"
                         placeholder='Write Something...'
                         className='text-area'
