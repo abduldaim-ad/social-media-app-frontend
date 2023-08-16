@@ -7,17 +7,25 @@ import './styles/PostTimeline.css'
 import MyComment from '../common/MyComment';
 import { FetchData } from '../../config/functions';
 import PostCardTimeline from './PostCardTimeline';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 import CustomAlert from '../common/CustomAlert';
 
 const PostTimeline = ({ userId, postId, postedBy, title, desc,
     handleGetUserPost, handleOpenModal, setOpenUpdateModal, setUpdatePostId,
-    setUpdatePostTitle, setUpdatePostDesc }) => {
+    setUpdatePostTitle, setUpdatePostDesc, open, setOpen, message, setMessage, severityVal, setSeverityVal }) => {
 
     const token = localStorage.getItem("userToken");
 
     const [comments, setComments] = useState([])
+
+    const [commentText, setCommentText] = useState("");
+
+    const [editCommentId, setEditCommentId] = useState(null);
+
+    const [tempComment, setTempComment] = useState("")
 
     const [readMoreDesc, setReadMoreDesc] = useState('');
     const [endSubset, setEndSubset] = useState(1)
@@ -27,35 +35,25 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
     const [openConfirm, setOpenConfirm] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
 
+    const [openConfirmComment, setOpenConfirmComment] = useState(false);
+    const [commentId, setCommentId] = useState("")
+
     const [username, setUsername] = useState("")
-
-    const [open, setOpen] = useState(false);
-
-    const [snackVariables, setSnackVariables] = useState({
-        message: "",
-        severityVal: ""
-    })
 
     const handleDeletePost = async () => {
         const url = `http://localhost:5000/deletepost/${selectedId}`
         const response = await FetchData(url, token, 'DELETE', null)
         if (response && response.data) {
             setOpen(true)
-            setSnackVariables({
-                ...snackVariables,
-                message: response.data.msg,
-                severityVal: "success"
-            })
-
+            setMessage(response.data.msg)
+            setSeverityVal("success")
             handleGetUserPost()
             setOpenConfirm(false)
         }
         else {
             setOpen(true)
-            setSnackVariables({
-                message: response.err,
-                severityVal: "error"
-            })
+            setMessage(response.data.err)
+            setSeverityVal("error")
         }
     }
 
@@ -97,6 +95,35 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
         }
     }
 
+    const handleConfirmDeleteComment = (_id) => {
+        setSelectedId(postId)
+        setCommentId(_id)
+        setOpenConfirmComment(true)
+    }
+
+    const handleEditComment = (_id, commentText) => {
+        setEditCommentId(_id);
+        setCommentText(commentText);
+        setTempComment(commentText);
+    }
+
+    const handleDeleteComment = async () => {
+        const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`
+        const response = await FetchData(url, token, 'DELETE', null)
+        if (response && response.data) {
+            setOpen(true)
+            setMessage(response.data.msg)
+            setSeverityVal("success")
+            setOpenConfirmComment(false)
+            handleGetPostComments()
+        }
+        else {
+            setOpen(true)
+            setMessage(response.err)
+            setSeverityVal("error")
+        }
+    }
+
     useEffect(() => {
         if (desc) {
             let val = desc?.slice(0, 150) || '';
@@ -132,15 +159,41 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                     setUpdatePostTitle={setUpdatePostTitle}
                     setUpdatePostDesc={setUpdatePostDesc}
                 />
-                <MyComment userId={userId} postId={postId} setComments={setComments} />
+
+                <MyComment userId={userId}
+                    postId={postId}
+                    setComments={setComments}
+                    open={open}
+                    setOpen={setOpen}
+                    setMessage={setMessage}
+                    setSeverityVal={setSeverityVal}
+                    commentText={commentText}
+                    setCommentText={setCommentText}
+                    tempComment={tempComment}
+                    editCommentId={editCommentId}
+                />
+
                 <Card sx={{ maxWidth: "100%" }} className='timeline-card'>
                     <ul className='comment-style'>
                         {
                             Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments.toReversed()?.map((comment) => {
-                                const { commentText, username } = comment;
+                                const { _id, commentText, username, createdBy } = comment;
                                 return (
                                     <Typography variant="caption" display="block" gutterBottom>
-                                        <li style={{ fontWeight: "bolder" }}><strong className='name-style'>{username}:</strong> {commentText}</li>
+                                        <li>
+                                            <strong className='name-style'>{username}: </strong>
+                                            {commentText}
+                                            <DeleteIcon
+                                                className='del-icon'
+                                                style={{ float: "right", visibility: (createdBy === userId) ? "visible" : "hidden" }}
+                                                onClick={() => handleConfirmDeleteComment(_id)}
+                                            />
+                                            <EditIcon
+                                                className='del-icon'
+                                                style={{ visibility: (createdBy === userId) ? "visible" : "hidden" }}
+                                                onClick={() => handleEditComment(_id, commentText)}
+                                            />
+                                        </li>
                                     </Typography>
                                 )
                             })
@@ -153,24 +206,25 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                         </Button>
                     </CardActions>
                 </Card>
-            </div >
+            </div>
             {
                 openConfirm
                 &&
                 <ConfirmationDialog
                     openConfirm={openConfirm}
                     setOpenConfirm={setOpenConfirm}
-                    handleDeletePost={handleDeletePost}
+                    handleDelete={handleDeletePost}
+                    type="post"
                 />
             }
             {
-                open
+                openConfirmComment
                 &&
-                <CustomAlert
-                    open={open}
-                    setOpen={setOpen}
-                    severityVal={snackVariables.severityVal}
-                    message={snackVariables.message}
+                <ConfirmationDialog
+                    openConfirm={openConfirmComment}
+                    setOpenConfirm={setOpenConfirmComment}
+                    handleDelete={handleDeleteComment}
+                    type="comment"
                 />
             }
         </>

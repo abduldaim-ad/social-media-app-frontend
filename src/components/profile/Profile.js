@@ -102,12 +102,15 @@ const Profile = () => {
                                 handleGetUserPost={handleGetUserPost}
                                 handleOpenModal={handleOpenModal}
                                 setOpenConfirm={setOpenConfirm}
+                                selectedId={selectedId}
                                 setSelectedId={setSelectedId}
                                 postedBy={createdBy}
                                 open={open}
                                 setOpen={setOpen}
                                 message={message}
+                                setMessage={setMessage}
                                 severityVal={severityVal}
+                                setSeverityVal={setSeverityVal}
                                 setOpenUpdateModal={setOpenUpdateModal}
                                 setUpdatePostId={setUpdatePostId}
                                 setUpdatePostTitle={setUpdatePostTitle}
@@ -147,9 +150,10 @@ const Profile = () => {
                 openConfirm
                 &&
                 <ConfirmationDialog
+                    type="post"
                     openConfirm={openConfirm}
                     setOpenConfirm={setOpenConfirm}
-                    handleDeletePost={handleDeletePost}
+                    handleDelete={handleDeletePost}
                 />
             }
         </>

@@ -19,7 +19,7 @@ export default function CustomAlert({ open, setOpen, severityVal, message }) {
     };
 
     return (
-        <Stack spacing={2} sx={{ width: '100%' }}>
+        <Stack spacing={2} sx={{ width: '100%', position: "absolute" }}>
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={severityVal} sx={{ width: '100%' }}>
                     {message}

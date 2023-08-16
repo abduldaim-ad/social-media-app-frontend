@@ -34,3 +34,9 @@
 .tf{
     margin:2% !important;
 }
+
+@media screen and (max-width:600px){
+    .main-div{
+        width:60%;
+    }
+}

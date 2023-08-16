@@ -29,3 +29,45 @@
     border:none !important;
     box-shadow: none;
 }
+
+.profile-icon{
+    position: absolute !important;
+    right: 6% !important;
+}
+
+.signup-style{
+    position: absolute !important;
+    right: 2% !important;
+}
+
+.login-style{
+    position: absolute !important;
+    right: 8% !important;
+}
+
+.logout-icon{
+    position: absolute !important;
+    right: 1% !important;
+}
+
+@media screen and (max-width:800px){
+    .profile-icon{
+        position: absolute !important;
+        right: 15% !important;
+    }
+    
+    .signup-style{
+        position: absolute !important;
+        right: 1% !important;
+    }
+    
+    .login-style{
+        position: absolute !important;
+        right: 16% !important;
+    }
+    
+    .logout-icon{
+        position: absolute !important;
+        right: 0% !important;
+    }
+}

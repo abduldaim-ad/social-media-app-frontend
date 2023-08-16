@@ -122,6 +122,12 @@ const Timeline = () => {
                                     title={title}
                                     desc={desc}
                                     postedBy={createdBy}
+                                    open={open}
+                                    setOpen={setOpen}
+                                    message={message}
+                                    setMessage={setMessage}
+                                    severity={severityVal}
+                                    setSeverityVal={setSeverityVal}
                                     handleOpenModal={handleOpenModal}
                                     handleGetUserPost={handleGetUserPost}
                                     setOpenUpdateModal={setOpenUpdateModal}

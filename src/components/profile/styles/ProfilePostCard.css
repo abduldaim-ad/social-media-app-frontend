@@ -6,6 +6,7 @@
 
 .del-icon{
     color: var(--primary);
+    cursor: pointer;
 }
 
 .del-icon:hover{

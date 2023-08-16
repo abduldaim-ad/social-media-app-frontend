@@ -12,20 +12,32 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CustomAlert from '../common/CustomAlert'
 import useAuth from '../../hooks/useAuth';
 import MyComment from '../common/MyComment';
+import ConfirmationDialog from '../common/ConfirmationDialog';
 
 const ProfilePostCard =
     ({ userId, postId, title, desc, handleGetUserPost,
-        handleOpenModal, setOpenConfirm, setSelectedId,
+        handleOpenModal, setOpenConfirm, selectedId, setSelectedId,
         open, setOpen, message, severityVal, postedBy, setOpenUpdateModal,
-        setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc }) => {
+        setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc,
+        setMessage, setSeverityVal }) => {
 
-        const [readMoreDesc, setReadMoreDesc] = useState('')
-        const [show, setShow] = useState("Show More")
-        const [showDesc, setShowDesc] = useState(" ... show more")
-        const [comments, setComments] = useState([{}])
-        const [endSubset, setEndSubset] = useState(1)
+        const [readMoreDesc, setReadMoreDesc] = useState('');
+        const [show, setShow] = useState("Show More");
+        const [showDesc, setShowDesc] = useState(" ... show more");
+        const [comments, setComments] = useState([{}]);
+        const [endSubset, setEndSubset] = useState(1);
 
-        const [username, setUsername] = useState("")
+        const [commentText, setCommentText] = useState("");
+
+        const [editCommentId, setEditCommentId] = useState(null);
+
+        const [tempComment, setTempComment] = useState("");
+
+        const [username, setUsername] = useState("");
+
+        const [openConfirmComment, setOpenConfirmComment] = useState(false);
+
+        const [commentId, setCommentId] = useState("")
 
         // const { token } = useAuth()
 
@@ -62,7 +74,7 @@ const ProfilePostCard =
         }
 
         const handleGetUserPostComments = async () => {
-            const url = `http://localhost:5000/getuserpostcomments/${userId}/${postId}`
+            const url = `http://localhost:5000/getpostcomments/${postId}`
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setComments(response.data)
@@ -76,9 +88,39 @@ const ProfilePostCard =
             setOpenUpdateModal(true)
         }
 
+        const handleEditComment = (_id, commentText) => {
+            setEditCommentId(_id)
+            setCommentText(commentText)
+            setTempComment(commentText)
+        }
+
         const handleConfirmDelete = () => {
             setSelectedId(postId)
             setOpenConfirm(true)
+        }
+
+        const handleConfirmDeleteComment = (_id) => {
+            setSelectedId(postId)
+            setCommentId(_id)
+            setOpenConfirmComment(true)
+        }
+
+        const handleDeleteComment = async () => {
+            const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`
+            console.log("Testinggggg", commentId, selectedId)
+            const response = await FetchData(url, token, 'DELETE', null)
+            if (response && response.data) {
+                setOpen(true)
+                setMessage(response.data.msg)
+                setSeverityVal("success")
+                setOpenConfirmComment(false)
+                handleGetUserPostComments()
+            }
+            else {
+                setOpen(true)
+                setMessage(response.err)
+                setSeverityVal("error")
+            }
         }
 
         useEffect(() => {
@@ -124,18 +166,45 @@ const ProfilePostCard =
                             </CardContent>
                         </CardActionArea>
 
+                        <MyComment
+                            userId={userId}
+                            postId={postId}
+                            setComments={setComments}
+                            open={open}
+                            setOpen={setOpen}
+                            setMessage={setMessage}
+                            setSeverityVal={setSeverityVal}
+                            commentText={commentText}
+                            setCommentText={setCommentText}
+                            tempComment={tempComment}
+                            editCommentId={editCommentId}
+                        />
+
                         <ul className='comment-style'>
                             {
                                 Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments?.map((comment) => {
-                                    const { commentText, username } = comment;
+                                    const { _id, commentText, username, createdBy } = comment;
                                     return (
-                                        <li><strong className='name-style'>{username}:</strong> {commentText}</li>
+                                        <Typography variant="caption" display="block" gutterBottom>
+                                            <li>
+                                                <strong className='name-style'>{username}: </strong>
+                                                {commentText}
+                                                <DeleteIcon
+                                                    className='del-icon'
+                                                    style={{ float: "right", visibility: (createdBy === userId) ? "visible" : "hidden" }}
+                                                    onClick={() => handleConfirmDeleteComment(_id)}
+                                                />
+                                                <EditIcon
+                                                    className='del-icon'
+                                                    style={{ visibility: (createdBy === userId) ? "visible" : "hidden" }}
+                                                    onClick={() => handleEditComment(_id, commentText)}
+                                                />
+                                            </li>
+                                        </Typography>
                                     )
                                 })
                             }
                         </ul>
-
-                        <MyComment userId={userId} postId={postId} setComments={setComments} />
 
                         <CardActions onClick={() => handleTextLength()}>
                             <Button size="small" color="primary" style={{ textTransform: "lowercase", visibility: (comments.length > 1) ? "visible" : "hidden" }}>
@@ -145,6 +214,16 @@ const ProfilePostCard =
                     </Card>
                 </div>
                 {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}
+                {
+                    openConfirmComment
+                    &&
+                    <ConfirmationDialog
+                        openConfirm={openConfirmComment}
+                        setOpenConfirm={setOpenConfirmComment}
+                        handleDelete={handleDeleteComment}
+                        type="comment"
+                    />
+                }
             </>
         );
     }

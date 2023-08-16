@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConfirmationDialog = ({ openConfirm, setOpenConfirm, handleDeletePost }) => {
+const ConfirmationDialog = ({ openConfirm, setOpenConfirm, handleDelete, type }) => {
 
     const handleClose = () => {
         setOpenConfirm(false);
@@ -29,12 +29,12 @@ const ConfirmationDialog = ({ openConfirm, setOpenConfirm, handleDeletePost }) =
                 <DialogTitle>{"Confirm Delete!"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        Are you sure you want to delete this post?
+                        Are you sure you want to delete this {type}?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button style={{ color: "var(--primary)" }} onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" style={{ backgroundColor: "var(--primary)" }} onClick={() => handleDeletePost()}>Delete</Button>
+                    <Button variant="contained" style={{ backgroundColor: "var(--primary)" }} onClick={() => handleDelete()}>Delete</Button>
                 </DialogActions>
             </Dialog>
         </div>
