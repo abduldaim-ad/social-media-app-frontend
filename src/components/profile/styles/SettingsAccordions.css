@@ -1,0 +1,17 @@
+.change-container{
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: space-around !important; 
+    margin: auto !important;
+}
+
+.input-style{
+    width:60%;
+    margin: 2% auto !important;
+}
+
+.modal-btn-style{
+    width: 50% !important;
+    margin: 2% auto !important;
+    background-color: var(--primary) !important;
+}

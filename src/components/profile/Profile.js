@@ -6,6 +6,7 @@ import { FetchData } from '../../config/functions';
 import UpdateModal from '../common/UpdateModal';
 import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
+import UserDetails from './UserDetails';
 
 const Profile = () => {
 
@@ -37,7 +38,7 @@ const Profile = () => {
     // }
 
     const token = localStorage.getItem("userToken");
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")));
 
     const { _id } = user;
     const userId = _id;
@@ -88,6 +89,7 @@ const Profile = () => {
 
                 </div>
             </div>
+            <UserDetails username={user.username} email={user.email} setUser={setUser} />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
                 {
