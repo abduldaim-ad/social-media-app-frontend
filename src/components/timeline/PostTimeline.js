@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 import CustomAlert from '../common/CustomAlert';
+import { useNavigate } from 'react-router-dom';
 
 const PostTimeline = ({ userId, postId, postedBy, title, desc,
     handleGetUserPost, handleOpenModal, setOpenUpdateModal, setUpdatePostId,
@@ -36,9 +37,14 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
     const [selectedId, setSelectedId] = useState(null);
 
     const [openConfirmComment, setOpenConfirmComment] = useState(false);
-    const [commentId, setCommentId] = useState("")
+    const [commentId, setCommentId] = useState("");
 
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState("");
+
+    const user = JSON.parse(localStorage.getItem("userData"));
+    const authUsername = user.username;
+
+    const navigate = useNavigate();
 
     const handleDeletePost = async () => {
         const url = `http://localhost:5000/deletepost/${selectedId}`
@@ -124,6 +130,15 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
         }
     }
 
+    const handleOtherProfiles = (username, createdBy) => {
+        if (username !== authUsername) {
+            navigate(`/profile/${username}`, { state: { _id: createdBy } });
+        }
+        else {
+            navigate('/profile');
+        }
+    }
+
     useEffect(() => {
         if (desc) {
             let val = desc?.slice(0, 150) || '';
@@ -181,7 +196,7 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                                 return (
                                     <Typography variant="caption" display="block" gutterBottom>
                                         <li>
-                                            <strong className='name-style'>{username}: </strong>
+                                            <strong onClick={() => handleOtherProfiles(username, createdBy)} className='name-style'>{username}: </strong>
                                             {commentText}
                                             <DeleteIcon
                                                 className='del-icon'

@@ -7,12 +7,10 @@ const useAuth = () => {
     useEffect(() => {
         const token = localStorage.getItem('userToken');
         const user = localStorage.getItem('userData');
-
         if (token && user) {
             setToken(token);
             setUser(user);
         }
-
     }, [])
     return {
         token,

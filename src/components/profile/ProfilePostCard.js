@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -41,7 +42,11 @@ const ProfilePostCard =
 
         // const { token } = useAuth()
 
+        const navigate = useNavigate();
+
         const token = localStorage.getItem("userToken");
+        const user = JSON.parse(localStorage.getItem("userData"));
+        const authUsername = user.username;
 
         const handleDescLength = () => {
             if (showDesc === " ... show more") {
@@ -123,6 +128,15 @@ const ProfilePostCard =
             }
         }
 
+        const handleOtherProfiles = (username, createdBy) => {
+            if (username !== authUsername) {
+                navigate(`/profile/${username}`, { state: { _id: createdBy } });
+            }
+            else {
+                navigate('/profile');
+            }
+        }
+
         useEffect(() => {
             if (desc) {
                 let val = desc?.slice(0, 150) || '';
@@ -187,8 +201,9 @@ const ProfilePostCard =
                                     return (
                                         <Typography variant="caption" display="block" gutterBottom>
                                             <li>
-                                                <strong className='name-style'>{username}: </strong>
+                                                <strong onClick={() => handleOtherProfiles(username, createdBy)} className='name-style'>{username}: </strong>
                                                 {commentText}
+                                                {console.log("TestingHere", createdBy, userId)}
                                                 <DeleteIcon
                                                     className='del-icon'
                                                     style={{ float: "right", visibility: (createdBy === userId) ? "visible" : "hidden" }}

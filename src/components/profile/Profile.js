@@ -32,23 +32,14 @@ const Profile = () => {
     const [updatePostTitle, setUpdatePostTitle] = useState("");
     const [updatePostDesc, setUpdatePostDesc] = useState("");
 
-    // const handleOpen111 = (id) => {
-    //     setSelected((prev) => id)
-    //     setOpenConfirm(true);
-    // }
-
     const token = localStorage.getItem("userToken");
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")));
 
     const { _id } = user;
     const userId = _id;
 
-    // const { user } = useAuth();
-
-    // console.log("UserTest", user)
-
     const handleGetUserPost = async () => {
-        const url = 'http://localhost:5000/getuserposts';
+        const url = `http://localhost:5000/getuserposts/${userId}`;
         const response = await FetchData(url, token, 'GET', null);
         if (response && response.data) {
             setMyPosts(response.data)
@@ -89,7 +80,7 @@ const Profile = () => {
 
                 </div>
             </div>
-            <UserDetails username={user.username} email={user.email} setUser={setUser} />
+            <UserDetails username={user.username} email={user.email} setUser={setUser} isAuthId={userId} />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
                 {

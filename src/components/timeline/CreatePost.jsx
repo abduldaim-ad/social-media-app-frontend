@@ -14,6 +14,7 @@ const CreatePost = ({ title, desc, handleTitleChange, handleDescChange, handleCr
                     onChange={handleTitleChange}
                     ref={titleRef}
                     autoFocus
+                    style={{ width: "93%" }}
                 />
 
                 <div className='text-area-div'>

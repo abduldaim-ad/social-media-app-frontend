@@ -5,6 +5,7 @@ import LogIn from "./components/auth/LogIn";
 import Navbar from "./components/common/Navbar";
 import Profile from "./components/profile/Profile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import OtherUserProfile from "./components/otherUserProfile/OtherUserProfile";
 
 const App = () => {
 
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<LogIn setLocal={setLocal} />} />
+            <Route path="/profile/:createdBy" element={<OtherUserProfile />} />
           </Routes>
         </div>
       </Router>
