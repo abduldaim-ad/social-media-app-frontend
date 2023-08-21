@@ -203,7 +203,6 @@ const ProfilePostCard =
                                             <li>
                                                 <strong onClick={() => handleOtherProfiles(username, createdBy)} className='name-style'>{username}: </strong>
                                                 {commentText}
-                                                {console.log("TestingHere", createdBy, userId)}
                                                 <DeleteIcon
                                                     className='del-icon'
                                                     style={{ float: "right", visibility: (createdBy === userId) ? "visible" : "hidden" }}

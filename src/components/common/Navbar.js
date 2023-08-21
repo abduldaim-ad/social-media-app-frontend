@@ -2,8 +2,13 @@ import React from "react";
 import './styles/Navbar.css'
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Autocomplete from '@mui/material/Autocomplete';
 import LogoutIcon from '@mui/icons-material/Logout';
+import TextField from '@mui/material/TextField';
+import SearchUser from "./SearchUser";
 
 const Navbar = ({ local, setLocal }) => {
 
@@ -19,6 +24,7 @@ const Navbar = ({ local, setLocal }) => {
                     <img src="https://www.freeiconspng.com/uploads/facebook-logo-4.png" alt="" style={{ width: "40px" }} />
                     {local && <Link to="/" className="link"><Button className="btn-style">Timeline</Button></Link>}
                     <div className="right-btn">
+                        <SearchUser />
                         {local && <Link to="/profile" className="link"><Button className="btn-style profile-icon"><AccountCircleIcon /></Button></Link>}
                         {!local && <Link to="/signup" className="link"><Button className="btn-style signup-style">Sign Up</Button></Link>}
                         {!local && <Link to="/login" className="link"><Button className="btn-style login-style">Log In</Button></Link>}
