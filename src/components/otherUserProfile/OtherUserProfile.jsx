@@ -4,6 +4,8 @@ import UserDetails from '../profile/UserDetails';
 import { FetchData } from '../../config/functions';
 import ProfilePostCard from '../profile/ProfilePostCard'
 import CustomModal from '../common/CustomModal';
+import Avatar from '@mui/material/Avatar';
+import Paper from '@mui/material/Paper';
 import '../profile/styles/Profile.css';
 
 const OtherUserProfile = () => {
@@ -17,6 +19,7 @@ const OtherUserProfile = () => {
     const userId = userData._id;
 
     const [user, setUser] = useState({});
+    const [isFriend, setIsFriend] = useState(false);
 
     const [myPosts, setMyPosts] = useState([])
 
@@ -34,21 +37,6 @@ const OtherUserProfile = () => {
     const [severityVal, setSeverityVal] = useState("");
 
     const _id = location.state._id;
-
-    const handleGetUserPost = async () => {
-        const url = `http://localhost:5000/getuserposts/${_id}`;
-        const response = await FetchData(url, token, 'GET', null);
-        if (response && response.data) {
-            setMyPosts([])
-            setMyPosts(response.data)
-        }
-    }
-
-    useEffect(() => {
-        if (_id) {
-            handleGetUserPost();
-        }
-    }, [flag, _id])
 
     const handleOpenModal = (title, desc) => {
         setModalTitle(title)
@@ -70,14 +58,40 @@ const OtherUserProfile = () => {
         }
     }, [_id])
 
+    const handleGetUserPost = async () => {
+        console.log("YesIsFriend", isFriend)
+        if (isFriend) {
+            const url = `http://localhost:5000/getuserposts/${_id}`;
+            const response = await FetchData(url, token, 'GET', null);
+            if (response && response.data) {
+                setMyPosts([])
+                setMyPosts(response.data)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (_id) {
+            handleGetUserPost();
+        }
+    }, [flag, _id, isFriend])
+
     return (
         <>
             <div className='cover-div'>
-                <div className='profile-div'>
+                {/* <div className='profile-div'>
 
-                </div>
+                </div> */}
+                <Avatar
+                    // alt={user.username}
+                    src="/static/images/avatar/1.jpg"
+                    sx={{
+                        width: 250, height: 250, backgroundColor: isFriend ? "var(--secondary)" : "var(--grey)",
+                        border: "5px solid var(--white)"
+                    }}
+                />
             </div>
-            <UserDetails username={user.username} email={user.email} setUser={setUser} isAuthId={_id} />
+            <UserDetails username={user.username} email={user.email} setUser={setUser} isAuthId={_id} setIsFriend={setIsFriend} />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
                 {

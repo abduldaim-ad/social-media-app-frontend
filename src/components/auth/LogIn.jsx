@@ -69,7 +69,7 @@ const LogIn = ({ setLocal }) => {
                     console.log(error);
                     setOpen(true)
                     setMessage(error.response.data.err)
-                    setSeverityVal("success")
+                    setSeverityVal("error")
                 });
 
         }

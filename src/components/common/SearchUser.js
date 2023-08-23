@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -11,9 +12,11 @@ const SearchUser = () => {
     const [foundUsers, setFoundUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null); // New state for selected user
 
-    const token = localStorage.getItem("userToken");
+    const navigate = useNavigate();
 
-    console.log("searchUser", searchUser)
+    const token = localStorage.getItem("userToken");
+    const user = localStorage.getItem("userData");
+    const authUsername = user.username;
 
     const getUsers = async (e) => {
         setSearchUser(e.target.value);
@@ -26,8 +29,16 @@ const SearchUser = () => {
 
     // New handler for selecting a user
     const handleUserSelect = (value) => {
-        setSelectedUser(value);
-        console.log("Selected user:", value);
+        const found = foundUsers?.find(item => item.username === value);
+        if (found) {
+            const createdBy = found._id;
+            if (value !== authUsername) {
+                navigate(`/profile/${value}`, { state: { _id: createdBy } });
+            }
+            else {
+                navigate('/profile');
+            }
+        }
     }
 
     return (

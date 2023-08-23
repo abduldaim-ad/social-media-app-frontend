@@ -24,7 +24,7 @@ const Navbar = ({ local, setLocal }) => {
                     <img src="https://www.freeiconspng.com/uploads/facebook-logo-4.png" alt="" style={{ width: "40px" }} />
                     {local && <Link to="/" className="link"><Button className="btn-style">Timeline</Button></Link>}
                     <div className="right-btn">
-                        <SearchUser />
+                        {local && <SearchUser />}
                         {local && <Link to="/profile" className="link"><Button className="btn-style profile-icon"><AccountCircleIcon /></Button></Link>}
                         {!local && <Link to="/signup" className="link"><Button className="btn-style signup-style">Sign Up</Button></Link>}
                         {!local && <Link to="/login" className="link"><Button className="btn-style login-style">Log In</Button></Link>}

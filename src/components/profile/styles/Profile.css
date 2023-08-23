@@ -5,6 +5,8 @@
     background-image: url('https://e1.pxfuel.com/desktop-wallpaper/481/340/desktop-wallpaper-backgrounds-of-widescreen-nature-with-quotes-for-facebook-cover-page-fb-cover.jpg');
     box-shadow: 2px 2px 2px 2px var(--grey);
     padding: 2%;
+    display: grid !important;
+    place-items: left !important;
 }
 
 .profile-div{
@@ -32,4 +34,10 @@
     text-align: center;
     color: var(--primary);
     text-shadow: 1px 1px var(--grey);
+}
+
+@media screen and (max-width:500px){
+    .cover-div{
+        place-items:center;
+    }
 }

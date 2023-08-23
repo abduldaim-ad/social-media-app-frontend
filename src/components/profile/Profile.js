@@ -7,6 +7,7 @@ import UpdateModal from '../common/UpdateModal';
 import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 import UserDetails from './UserDetails';
+import Avatar from '@mui/material/Avatar';
 
 const Profile = () => {
 
@@ -76,11 +77,25 @@ const Profile = () => {
     return (
         <>
             <div className='cover-div'>
-                <div className='profile-div'>
+                {/* <div className='profile-div'>
 
-                </div>
+                </div> */}
+                <Avatar
+                    // alt={user.username}
+                    src="/static/images/avatar/1.jpg"
+                    sx={{
+                        width: 250, height: 250, backgroundColor: "var(--primary)",
+                        border: "5px solid var(--white)"
+                    }}
+                />
             </div>
-            <UserDetails username={user.username} email={user.email} setUser={setUser} isAuthId={userId} />
+            <UserDetails
+                username={user.username}
+                email={user.email}
+                setUser={setUser}
+                isAuthId={userId}
+                setIsFriend={false}
+            />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
                 {
