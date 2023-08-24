@@ -13,6 +13,7 @@ const Timeline = () => {
     const [allPosts, setAllPosts] = useState([])
     const [title, setTitle] = useState("")
     const [desc, setDesc] = useState("")
+    const [photo, setPhoto] = useState("")
 
     const [modalTitle, setModalTitle] = useState("")
     const [modalDesc, setModalDesc] = useState("")
@@ -29,6 +30,8 @@ const Timeline = () => {
     const [updatePostTitle, setUpdatePostTitle] = useState("");
     const [updatePostDesc, setUpdatePostDesc] = useState("");
     const [flag, setFlag] = useState(false);
+    const [friendsList, setFriendsList] = useState([]);
+    const [username, setUsername] = useState([]);
 
     const titleRef = useRef()
     const descRef = useRef()
@@ -38,6 +41,11 @@ const Timeline = () => {
     const userId = user._id;
 
     const handleGetUserPost = async () => {
+        const urlUser = `http://localhost:5000/getuserdetails/${userId}`
+        const responseUser = await FetchData(urlUser, token, 'GET', null)
+        if (responseUser && responseUser.data) {
+            setFriendsList(responseUser.data.friendsUsername);
+        }
 
         const url = 'http://localhost:5000/getallposts';
         const response = await FetchData(url, token, 'GET', null)
@@ -49,6 +57,17 @@ const Timeline = () => {
             setMessage(response.err)
             setSeverityVal("error")
         }
+    }
+
+    const getUsername = () => {
+        allPosts.toReversed()?.map(async (post) => {
+            const { createdBy } = post;
+            const url = `http://localhost:5000/getusername/${createdBy}`
+            const response = await FetchData(url, token, 'GET', null)
+            if (response && response.data) {
+                setUsername(existing => [...existing, response.data.username]);
+            }
+        })
     }
 
     const handleOpenModal = (title, desc) => {
@@ -65,6 +84,25 @@ const Timeline = () => {
         setDesc(descRef.current.value)
     }
 
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
+    const handlePhotoChange = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertToBase64(file);
+        setPhoto(base64);
+    }
+
     const handleCreatePost = async () => {
         if (!title || !desc) {
             setOpen(true)
@@ -76,7 +114,8 @@ const Timeline = () => {
             const url = 'http://localhost:5000/createpost';
             let body = JSON.stringify({
                 title,
-                desc
+                desc,
+                photo
             });
             const response = await FetchData(url, token, 'POST', body);
             if (response && response.data) {
@@ -98,21 +137,23 @@ const Timeline = () => {
         handleGetUserPost();
     }, [flag])
 
-
     return (
         <>
             <CreatePost
                 title={title}
                 desc={desc}
+                photo={photo}
                 handleTitleChange={handleTitleChange}
                 handleDescChange={handleDescChange}
                 handleCreatePost={handleCreatePost}
+                handlePhotoChange={handlePhotoChange}
                 titleRef={titleRef}
                 descRef={descRef}
             />
             <div className='all-posts-div'>
                 {
-                    Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed()?.map((post) => {
+                    Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed()?.map((post, index) => {
+                        {/* if (friendsList.includes(username[index])) { */ }
                         const { _id, title, desc, createdBy } = post;
                         return (
                             <>
@@ -137,6 +178,7 @@ const Timeline = () => {
                                 />
                             </>
                         )
+                        {/* } */ }
                     })
                 }
             </div>

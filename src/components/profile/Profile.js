@@ -15,6 +15,7 @@ const Profile = () => {
 
     const [modalTitle, setModalTitle] = useState("")
     const [modalDesc, setModalDesc] = useState("")
+    const [modalPhoto, setModalPhoto] = useState("")
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -32,6 +33,7 @@ const Profile = () => {
     const [updatePostId, setUpdatePostId] = useState("");
     const [updatePostTitle, setUpdatePostTitle] = useState("");
     const [updatePostDesc, setUpdatePostDesc] = useState("");
+    const [updatePostPhoto, setUpdatePostPhoto] = useState("");
 
     const token = localStorage.getItem("userToken");
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")));
@@ -68,9 +70,10 @@ const Profile = () => {
         }
     }
 
-    const handleOpenModal = (title, desc) => {
+    const handleOpenModal = (title, desc, photo) => {
         setModalTitle(title)
         setModalDesc(desc)
+        setModalPhoto(photo)
         setOpenModal(true)
     }
 
@@ -100,13 +103,14 @@ const Profile = () => {
             <div className='card-div'>
                 {
                     myPosts.toReversed().map((myPost) => {
-                        const { _id, title, desc, createdBy } = myPost
+                        const { _id, title, desc, photo, createdBy } = myPost
                         return (
                             <ProfilePostCard
                                 userId={userId}
                                 postId={_id}
                                 title={title}
                                 desc={desc}
+                                photo={photo}
                                 handleGetUserPost={handleGetUserPost}
                                 handleOpenModal={handleOpenModal}
                                 setOpenConfirm={setOpenConfirm}
@@ -123,6 +127,7 @@ const Profile = () => {
                                 setUpdatePostId={setUpdatePostId}
                                 setUpdatePostTitle={setUpdatePostTitle}
                                 setUpdatePostDesc={setUpdatePostDesc}
+                                setUpdatePostPhoto={setUpdatePostPhoto}
                             />
                         )
                     })
@@ -138,6 +143,7 @@ const Profile = () => {
                     postId={updatePostId}
                     title={updatePostTitle}
                     desc={updatePostDesc}
+                    photo={updatePostPhoto}
                     setOpen={setOpen}
                     setFlag={setFlag}
                     flag={flag}
@@ -152,6 +158,7 @@ const Profile = () => {
                 setOpenModal={setOpenModal}
                 modalTitle={modalTitle}
                 modalDesc={modalDesc}
+                modalPhoto={modalPhoto}
             />
 
             {

@@ -13,7 +13,7 @@ const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    height: 200,
+    height: 500,
     transform: 'translate(-50%, -50%)',
     width: "80%",
     bgcolor: 'background.paper',
@@ -28,6 +28,7 @@ export default function UpdateModal({
     postId,
     title,
     desc,
+    photo,
     setOpen,
     setSeverityVal,
     setMessage,
@@ -41,6 +42,7 @@ export default function UpdateModal({
 
     const [titleVal, setTitleVal] = useState(title)
     const [descVal, setDescVal] = useState(desc)
+    const [photoVal, setPhotoVal] = useState(photo)
 
     const token = localStorage.getItem("userToken");
 
@@ -54,11 +56,31 @@ export default function UpdateModal({
         setDescVal(descRef.current.value)
     }
 
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
+    const handlePhotoChange = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertToBase64(file);
+        setPhotoVal(base64);
+    }
+
     const handleUpdate = async () => {
         const body = JSON.stringify({
             _id: postId,
             title: titleVal,
-            desc: descVal
+            desc: descVal,
+            photo: photoVal
         })
         const url = `http://localhost:5000/updatepost`
         const response = await FetchData(url, token, 'PUT', body)
@@ -88,6 +110,16 @@ export default function UpdateModal({
                 >
                     <Box sx={style}>
                         <div className='post-div'>
+
+                            <img src={photoVal} alt={title} style={{ width: "100%" }} />
+
+                            <input
+                                type="file"
+                                accept=".png, .jpg, .jpeg"
+                                name="photo"
+                                onChange={handlePhotoChange}
+                            />
+
                             <input
                                 type="text"
                                 className='input-style'
@@ -114,7 +146,7 @@ export default function UpdateModal({
 
                                 <SendIcon className='create-btn' onClick={handleUpdate}
                                     style={{
-                                        visibility: (titleVal && descVal && (title !== titleVal || desc !== descVal))
+                                        visibility: (titleVal && descVal && photoVal && (photo !== photoVal || title !== titleVal || desc !== descVal))
                                             ?
                                             "visible"
                                             : "hidden",

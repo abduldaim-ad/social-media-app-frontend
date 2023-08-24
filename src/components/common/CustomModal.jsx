@@ -19,7 +19,7 @@ const style = {
     p: 4,
 };
 
-const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc }) => {
+const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc, modalPhoto }) => {
     const handleCloseModal = () => setOpenModal(false);
 
     return (
@@ -30,7 +30,7 @@ const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc }) => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <img src="https://wallpapers.com/images/featured/nature-2ygv7ssy2k0lxlzu.jpg" alt="Beautiful Wallpaper" className='modal-img' />
+                <img src={modalPhoto} alt="Beautiful Wallpaper" className='modal-img' />
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     {modalTitle}
                 </Typography>

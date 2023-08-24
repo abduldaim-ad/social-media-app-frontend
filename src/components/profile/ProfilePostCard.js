@@ -16,10 +16,10 @@ import MyComment from '../common/MyComment';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 
 const ProfilePostCard =
-    ({ userId, postId, title, desc, handleGetUserPost,
+    ({ userId, postId, title, desc, photo, handleGetUserPost,
         handleOpenModal, setOpenConfirm, selectedId, setSelectedId,
         open, setOpen, message, severityVal, postedBy, setOpenUpdateModal,
-        setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc,
+        setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc, setUpdatePostPhoto,
         setMessage, setSeverityVal }) => {
 
         const [readMoreDesc, setReadMoreDesc] = useState('');
@@ -90,6 +90,7 @@ const ProfilePostCard =
             setUpdatePostId(postId)
             setUpdatePostTitle(title)
             setUpdatePostDesc(desc)
+            setUpdatePostPhoto(photo)
             setOpenUpdateModal(true)
         }
 
@@ -112,7 +113,6 @@ const ProfilePostCard =
 
         const handleDeleteComment = async () => {
             const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`
-            console.log("Testinggggg", commentId, selectedId)
             const response = await FetchData(url, token, 'DELETE', null)
             if (response && response.data) {
                 setOpen(true)
@@ -159,9 +159,9 @@ const ProfilePostCard =
                             <CardMedia
                                 component="img"
                                 // height="140"
-                                image="https://wallpapers.com/images/featured/nature-2ygv7ssy2k0lxlzu.jpg"
+                                image={photo}
                                 alt="profile post"
-                                onClick={() => handleOpenModal(title, desc)}
+                                onClick={() => handleOpenModal(title, desc, photo)}
                             />
                             <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
                                 <EditIcon className='del-icon' style={{ float: "right", visibility: postedBy === userId ? "visible" : "hidden" }} onClick={() => handleEdit()} />

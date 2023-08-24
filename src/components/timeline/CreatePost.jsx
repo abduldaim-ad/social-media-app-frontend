@@ -2,7 +2,7 @@ import React from 'react'
 import './styles/CreatePost.css'
 import SendIcon from '@mui/icons-material/Send';
 
-const CreatePost = ({ title, desc, handleTitleChange, handleDescChange, handleCreatePost, titleRef, descRef }) => {
+const CreatePost = ({ title, desc, photo, handleTitleChange, handleDescChange, handlePhotoChange, handleCreatePost, titleRef, descRef }) => {
     return (
         <>
             <div className='post-div'>
@@ -30,7 +30,26 @@ const CreatePost = ({ title, desc, handleTitleChange, handleDescChange, handleCr
                         ref={descRef}
                     ></textarea>
 
-                    <SendIcon className='create-btn' onClick={handleCreatePost} style={{ visibility: (title && desc) ? "visible" : "hidden" }} />
+                    {photo && <img src={photo} alt={title} style={{ margin: "1% auto", width: "100%" }} />}
+
+                    <input
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        name="photo"
+                        onChange={handlePhotoChange}
+                    />
+
+                    <SendIcon
+                        className='create-btn'
+                        onClick={handleCreatePost}
+                        style={{
+                            visibility: (title && desc)
+                                ?
+                                "visible"
+                                :
+                                "hidden"
+                        }}
+                    />
                 </div>
             </div>
         </>
