@@ -8,7 +8,7 @@ import { CardActionArea } from '@mui/material';
 import './styles/PostCardTimeline.css'
 import { FetchData } from '../../config/functions';
 
-const PostCardTimeline = ({ title, desc, userId, username, postId, postedBy, readMoreDesc,
+const PostCardTimeline = ({ title, desc, photo, userId, username, postId, postedBy, readMoreDesc,
     handleOpenModal, setSelectedId, setOpenConfirm, handleDescLength, showDesc, setOpenUpdateModal,
     setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc }) => {
 
@@ -30,9 +30,9 @@ const PostCardTimeline = ({ title, desc, userId, username, postId, postedBy, rea
                 <CardMedia
                     component="img"
                     height="300"
-                    image="https://wallpapers.com/images/featured/nature-2ygv7ssy2k0lxlzu.jpg"
-                    alt="test image"
-                    onClick={() => handleOpenModal(title, desc)}
+                    image={photo}
+                    alt={title}
+                    onClick={() => handleOpenModal(title, desc, photo)}
                 />
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
                     <EditIcon className='del-icon' style={{ float: "right", visibility: postedBy === userId ? "visible" : "hidden" }} onClick={() => handleEdit()} />

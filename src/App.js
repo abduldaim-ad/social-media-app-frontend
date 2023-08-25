@@ -21,20 +21,22 @@ const App = () => {
   }, [])
 
   return (
-    <div className="main-scrollbar" id="style-4">
-      <Router>
-        <div className="App">
-          <Navbar local={local} setLocal={setLocal} />
-          <Routes>
-            <Route path="/" element={<Timeline />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<LogIn setLocal={setLocal} />} />
-            <Route path="/profile/:createdBy" element={<OtherUserProfile />} />
-          </Routes>
-        </div>
-      </Router>
-    </div>
+    <>
+      <div className="main-scrollbar" id="style-4">
+        <Router>
+          <div className="App">
+            <Navbar local={local} setLocal={setLocal} />
+            <Routes>
+              <Route path="/" element={<Timeline />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<LogIn setLocal={setLocal} />} />
+              <Route path="/profile/:createdBy" element={<OtherUserProfile />} />
+            </Routes>
+          </div>
+        </Router>
+      </div>
+    </>
   );
 }
 

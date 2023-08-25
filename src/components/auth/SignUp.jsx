@@ -6,6 +6,7 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import CustomAlert from '../common/CustomAlert';
+import UploadImage from '../common/UploadImage';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -23,6 +24,7 @@ const SignUp = () => {
         cPassword: ""
     });
 
+    const [file, setFile] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,7 +39,7 @@ const SignUp = () => {
         return /\S+@\S+\.\S+/.test(email);
     }
 
-    const handleClickSignUp = () => {
+    const handleClickSignUp = async () => {
         // setSignUpData(
         //     ...signUpData,
         //     {
@@ -46,53 +48,65 @@ const SignUp = () => {
         //         password: "",
         //         cPassword: ""
         //     })
+
         const { username, email, password, cPassword } = signUpData;
-        if (!username || !email || !password || !cPassword) {
-            setOpen(true)
-            setMessage("Please Fill All the Fields!")
-            setSeverityVal("error")
-        }
-        else if (!isValidEmail(email)) {
-            setOpen(true)
-            setMessage("Incorrect Email Format!")
-            setSeverityVal("error")
-        }
-        else if (password !== cPassword) {
-            setOpen(true)
-            setMessage("Passwords Did Not Match!")
-            setSeverityVal("error")
-        }
-        else {
-            let data = JSON.stringify({
-                username,
-                email,
-                password,
-                cPassword
-            });
 
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'http://localhost:5000/signup',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
-            };
+        const body = new FormData();
+        body.append("my_file", file);
+        body.append("username", username);
+        body.append("email", email);
+        body.append("password", password);
+        body.append("cPassword", cPassword);
 
-            axios.request(config)
-                .then((response) => {
-                    setOpen(true)
-                    setMessage(response.data.msg)
-                    setSeverityVal("success")
-                    navigate('/login')
-                })
-                .catch((error) => {
-                    setOpen(true)
-                    setMessage(error.response.data.err)
-                    setSeverityVal("error")
-                });
-        }
+        const res = await axios.post("http://localhost:5000/signup", body);
+
+        // const { username, email, password, cPassword } = signUpData;
+        // if (!username || !email || !password || !cPassword) {
+        //     setOpen(true)
+        //     setMessage("Please Fill All the Fields!")
+        //     setSeverityVal("error")
+        // }
+        // else if (!isValidEmail(email)) {
+        //     setOpen(true)
+        //     setMessage("Incorrect Email Format!")
+        //     setSeverityVal("error")
+        // }
+        // else if (password !== cPassword) {
+        //     setOpen(true)
+        //     setMessage("Passwords Did Not Match!")
+        //     setSeverityVal("error")
+        // }
+        // else {
+        //     let data = JSON.stringify({
+        //         username,
+        //         email,
+        //         password,
+        //         cPassword
+        //     });
+
+        //     let config = {
+        //         method: 'post',
+        //         maxBodyLength: Infinity,
+        //         url: 'http://localhost:5000/signup',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         data: data
+        //     };
+
+        //     axios.request(config)
+        //         .then((response) => {
+        //             setOpen(true)
+        //             setMessage(response.data.msg)
+        //             setSeverityVal("success")
+        //             navigate('/login')
+        //         })
+        //         .catch((error) => {
+        //             setOpen(true)
+        //             setMessage(error.response.data.err)
+        //             setSeverityVal("error")
+        //         });
+        // }
     }
 
     return (
@@ -107,6 +121,10 @@ const SignUp = () => {
                     onChange={(e) => handleChange(e)} className='tf' />
                 <TextField id="confirmPassword" name="cPassword" type='password' label="Confirm Password" variant="standard"
                     onChange={(e) => handleChange(e)} className='tf' />
+                <UploadImage
+                    file={file}
+                    setFile={setFile}
+                />
                 <Button variant="contained" className='btn' onClick={() => handleClickSignUp()}>Sign Up</Button>
                 <Link to="/login" className='link-style'>Already a User? Login Here</Link>
                 {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}

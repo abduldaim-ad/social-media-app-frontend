@@ -14,7 +14,7 @@ import ConfirmationDialog from '../common/ConfirmationDialog';
 import CustomAlert from '../common/CustomAlert';
 import { useNavigate } from 'react-router-dom';
 
-const PostTimeline = ({ userId, postId, postedBy, title, desc,
+const PostTimeline = ({ userId, postId, postedBy, title, desc, photo,
     handleGetUserPost, handleOpenModal, setOpenUpdateModal, setUpdatePostId,
     setUpdatePostTitle, setUpdatePostDesc, open, setOpen, message, setMessage, severityVal, setSeverityVal }) => {
 
@@ -161,6 +161,7 @@ const PostTimeline = ({ userId, postId, postedBy, title, desc,
                     username={username}
                     title={title}
                     desc={desc}
+                    photo={photo}
                     postId={postId}
                     postedBy={postedBy}
                     setSelectedId={setSelectedId}

@@ -33,6 +33,9 @@ const Timeline = () => {
     const [friendsList, setFriendsList] = useState([]);
     const [username, setUsername] = useState([]);
 
+    const [file, setFile] = useState(null);
+    // const [res, setRes] = useState({});
+
     const titleRef = useRef()
     const descRef = useRef()
 
@@ -70,10 +73,12 @@ const Timeline = () => {
         })
     }
 
-    const handleOpenModal = (title, desc) => {
+    const handleOpenModal = (title, desc, photo) => {
         setModalTitle(title)
         setModalDesc(desc)
         setOpenModal(true)
+        console.log("IsPHotoHere", photo)
+        setPhoto(photo)
     }
 
     const handleTitleChange = () => {
@@ -84,52 +89,36 @@ const Timeline = () => {
         setDesc(descRef.current.value)
     }
 
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
-
-    const handlePhotoChange = async (e) => {
-        const file = e.target.files[0];
-        const base64 = await convertToBase64(file);
-        setPhoto(base64);
-    }
-
     const handleCreatePost = async () => {
-        if (!title || !desc) {
+        if (!title || !desc || !file) {
             setOpen(true)
             setMessage("Please Fill All the Fields!")
             setSeverityVal("error")
             return;
         }
         else {
-            const url = 'http://localhost:5000/createpost';
-            let body = JSON.stringify({
-                title,
-                desc,
-                photo
-            });
-            const response = await FetchData(url, token, 'POST', body);
-            if (response && response.data) {
-                setOpen(true)
-                setMessage(response.data.msg)
-                setSeverityVal("success")
-                setTitle("")
-                setDesc("")
-            }
-            else {
-                setOpen(true)
-                setMessage(response.err)
-                setSeverityVal("error")
-            }
+
+            const body = new FormData();
+            body.append("my_file", file);
+            body.append("title", title);
+            body.append("desc", desc);
+
+            const res = await axios.post("http://localhost:5000/createpost", body);
+            console.log("HereOk", res)
+            // const url = 'http://localhost:5000/createpost';
+            // const response = await FetchData(url, token, 'POST', body);
+            // if (response && response.data) {
+            //     setOpen(true)
+            //     setMessage(response.data.msg)
+            //     setSeverityVal("success")
+            //     setTitle("")
+            //     setDesc("")
+            // }
+            // else {
+            //     setOpen(true)
+            //     setMessage(response.err)
+            //     setSeverityVal("error")
+            // }
         }
     }
 
@@ -146,15 +135,16 @@ const Timeline = () => {
                 handleTitleChange={handleTitleChange}
                 handleDescChange={handleDescChange}
                 handleCreatePost={handleCreatePost}
-                handlePhotoChange={handlePhotoChange}
                 titleRef={titleRef}
                 descRef={descRef}
+                file={file}
+                setFile={setFile}
             />
             <div className='all-posts-div'>
                 {
                     Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed()?.map((post, index) => {
                         {/* if (friendsList.includes(username[index])) { */ }
-                        const { _id, title, desc, createdBy } = post;
+                        const { _id, title, desc, photo, createdBy } = post;
                         return (
                             <>
                                 <PostTimeline
@@ -162,6 +152,8 @@ const Timeline = () => {
                                     postId={_id}
                                     title={title}
                                     desc={desc}
+                                    photo={photo}
+                                    setPhoto={setPhoto}
                                     postedBy={createdBy}
                                     open={open}
                                     setOpen={setOpen}
@@ -206,6 +198,7 @@ const Timeline = () => {
                 setOpenModal={setOpenModal}
                 modalTitle={modalTitle}
                 modalDesc={modalDesc}
+                photo={photo}
             />
 
             {

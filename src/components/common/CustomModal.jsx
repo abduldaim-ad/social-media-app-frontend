@@ -19,7 +19,7 @@ const style = {
     p: 4,
 };
 
-const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc, modalPhoto }) => {
+const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc, photo }) => {
     const handleCloseModal = () => setOpenModal(false);
 
     return (
@@ -30,7 +30,7 @@ const CustomModal = ({ openModal, setOpenModal, modalTitle, modalDesc, modalPhot
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <img src={modalPhoto} alt="Beautiful Wallpaper" className='modal-img' />
+                <img src={photo} alt="Timeline Post" className='modal-img' />
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     {modalTitle}
                 </Typography>

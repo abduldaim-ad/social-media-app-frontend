@@ -30,6 +30,8 @@ const Profile = () => {
     const [message, setMessage] = useState("");
     const [severityVal, setSeverityVal] = useState("");
 
+    const [profilePhoto, setProfilePhoto] = useState("");
+
     const [updatePostId, setUpdatePostId] = useState("");
     const [updatePostTitle, setUpdatePostTitle] = useState("");
     const [updatePostDesc, setUpdatePostDesc] = useState("");
@@ -49,7 +51,16 @@ const Profile = () => {
         }
     }
 
+    const getProfilePhoto = async () => {
+        const url = `http://localhost:5000/getuserdetails/${userId}`
+        const response = await FetchData(url, token, 'GET', null)
+        if (response && response.data) {
+            setProfilePhoto(response.data.profilePhoto);
+        }
+    }
+
     useEffect(() => {
+        getProfilePhoto();
         handleGetUserPost();
     }, [flag])
 
@@ -85,7 +96,7 @@ const Profile = () => {
                 </div> */}
                 <Avatar
                     // alt={user.username}
-                    src="/static/images/avatar/1.jpg"
+                    src={profilePhoto}
                     sx={{
                         width: 250, height: 250, backgroundColor: "var(--primary)",
                         border: "5px solid var(--white)"
