@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import CustomAlert from '../common/CustomAlert';
 import axios from 'axios';
 
-const LogIn = ({ setLocal }) => {
+const LogIn = ({ setLocal, socket }) => {
 
     const navigate = useNavigate();
 
@@ -57,19 +57,27 @@ const LogIn = ({ setLocal }) => {
 
             axios.request(config)
                 .then((response) => {
-                    setOpen(true)
-                    setMessage(response.data.msg)
-                    localStorage.setItem("userToken", response.data.token)
-                    localStorage.setItem("userData", JSON.stringify(response.data.user))
-                    setSeverityVal("success")
-                    setLocal(true)
-                    navigate('/')
+                    if (response && response.data) {
+                        console.log("LogRes", response.data)
+                        setOpen(true)
+                        setMessage("LogIn Successful!")
+                        setSeverityVal("success")
+                        localStorage.setItem("userToken", response.data.token)
+                        localStorage.setItem("userData", JSON.stringify(response.data.user))
+                        const user = JSON.parse(localStorage.getItem("userData"));
+                        const senderId = user._id;
+                        socket.emit('register_user', senderId);
+                        setLocal(true)
+                        navigate('/')
+                    }
                 })
                 .catch((error) => {
-                    console.log(error);
-                    setOpen(true)
-                    setMessage(error.response.data.err)
-                    setSeverityVal("error")
+                    if (error && error.response && error.response.data && error.response.data.err) {
+                        console.log(error);
+                        setOpen(true)
+                        setMessage(error.response.data.err)
+                        setSeverityVal("error")
+                    }
                 });
 
         }

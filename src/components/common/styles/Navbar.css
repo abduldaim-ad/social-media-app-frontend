@@ -32,7 +32,7 @@
 
 .input-tag{
     position: absolute !important;
-    right: 8% !important;
+    right: 12% !important;
     width:200px !important;
     margin: -1.5% auto !important;
 }
@@ -40,6 +40,23 @@
 .profile-icon{
     position: absolute !important;
     right: 6% !important;
+}
+
+.badge{
+    position: absolute !important;
+    right: 13% !important;
+    color: var(--white) !important;
+    cursor: pointer;
+    margin-top: 0.5% !important;
+}
+
+.badge:hover{
+    color: var(--black) !important;
+}
+
+.badge-icon{
+    position: absolute !important;
+    right: 0% !important;
 }
 
 .signup-style{

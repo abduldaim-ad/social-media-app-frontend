@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
@@ -9,7 +9,8 @@ import { FetchData } from '../../config/functions';
 import useAuth from '../../hooks/useAuth';
 
 export default function MyComment
-    ({ userId,
+    ({
+        userId,
         postId,
         setComments,
         open,
@@ -19,7 +20,8 @@ export default function MyComment
         commentText,
         setCommentText,
         tempComment,
-        editCommentId }) {
+        editCommentId
+    }) {
 
     const commentRef = useRef()
 

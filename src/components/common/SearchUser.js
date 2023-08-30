@@ -10,7 +10,6 @@ const SearchUser = () => {
 
     const [searchUser, setSearchUser] = useState("");
     const [foundUsers, setFoundUsers] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null); // New state for selected user
 
     const navigate = useNavigate();
 
@@ -27,7 +26,6 @@ const SearchUser = () => {
         }
     }
 
-    // New handler for selecting a user
     const handleUserSelect = (value) => {
         const found = foundUsers?.find(item => item.username === value);
         if (found) {

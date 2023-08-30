@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
-import './styles/Timeline.css'
-import axios from 'axios'
-import CustomAlert from '../common/CustomAlert'
-import CreatePost from './CreatePost'
-import CustomModal from '../common/CustomModal'
-import PostTimeline from './PostTimeline'
-import { FetchData } from '../../config/functions'
+import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import CustomAlert from '../common/CustomAlert';
+import CreatePost from './CreatePost';
+import CustomModal from '../common/CustomModal';
+import PostTimeline from './PostTimeline';
+import { FetchData } from '../../config/functions';
 import UpdateModal from '../common/UpdateModal';
+import './styles/Timeline.css'
 
 const Timeline = () => {
 
@@ -30,11 +30,8 @@ const Timeline = () => {
     const [updatePostTitle, setUpdatePostTitle] = useState("");
     const [updatePostDesc, setUpdatePostDesc] = useState("");
     const [flag, setFlag] = useState(false);
-    const [friendsList, setFriendsList] = useState([]);
-    const [username, setUsername] = useState([]);
 
     const [file, setFile] = useState(null);
-    // const [res, setRes] = useState({});
 
     const titleRef = useRef()
     const descRef = useRef()
@@ -44,11 +41,6 @@ const Timeline = () => {
     const userId = user._id;
 
     const handleGetUserPost = async () => {
-        const urlUser = `http://localhost:5000/getuserdetails/${userId}`
-        const responseUser = await FetchData(urlUser, token, 'GET', null)
-        if (responseUser && responseUser.data) {
-            setFriendsList(responseUser.data.friendsUsername);
-        }
 
         const url = 'http://localhost:5000/getallposts';
         const response = await FetchData(url, token, 'GET', null)
@@ -62,22 +54,10 @@ const Timeline = () => {
         }
     }
 
-    const getUsername = () => {
-        allPosts.toReversed()?.map(async (post) => {
-            const { createdBy } = post;
-            const url = `http://localhost:5000/getusername/${createdBy}`
-            const response = await FetchData(url, token, 'GET', null)
-            if (response && response.data) {
-                setUsername(existing => [...existing, response.data.username]);
-            }
-        })
-    }
-
     const handleOpenModal = (title, desc, photo) => {
         setModalTitle(title)
         setModalDesc(desc)
         setOpenModal(true)
-        console.log("IsPHotoHere", photo)
         setPhoto(photo)
     }
 
@@ -98,27 +78,27 @@ const Timeline = () => {
         }
         else {
 
+            const url = "http://localhost:5000/createpost"
             const body = new FormData();
             body.append("my_file", file);
             body.append("title", title);
             body.append("desc", desc);
+            body.append("userId", userId);
 
-            const res = await axios.post("http://localhost:5000/createpost", body);
-            console.log("HereOk", res)
-            // const url = 'http://localhost:5000/createpost';
-            // const response = await FetchData(url, token, 'POST', body);
-            // if (response && response.data) {
-            //     setOpen(true)
-            //     setMessage(response.data.msg)
-            //     setSeverityVal("success")
-            //     setTitle("")
-            //     setDesc("")
-            // }
-            // else {
-            //     setOpen(true)
-            //     setMessage(response.err)
-            //     setSeverityVal("error")
-            // }
+            const response = await axios.post(url, body);
+
+            if (response && response.data.msg) {
+                setOpen(true)
+                setMessage(response.data.msg)
+                setSeverityVal("success")
+                setTitle("")
+                setDesc("")
+            }
+            else {
+                setOpen(true)
+                setMessage(response.data.err)
+                setSeverityVal("error")
+            }
         }
     }
 
@@ -143,7 +123,6 @@ const Timeline = () => {
             <div className='all-posts-div'>
                 {
                     Array.isArray(allPosts) && allPosts?.length > 0 && allPosts.toReversed()?.map((post, index) => {
-                        {/* if (friendsList.includes(username[index])) { */ }
                         const { _id, title, desc, photo, createdBy } = post;
                         return (
                             <>
@@ -170,7 +149,6 @@ const Timeline = () => {
                                 />
                             </>
                         )
-                        {/* } */ }
                     })
                 }
             </div>

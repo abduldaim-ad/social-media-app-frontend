@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import './styles/Profile.css'
+import React, { useEffect, useState } from 'react';
 import ProfilePostCard from './ProfilePostCard'
 import CustomModal from '../common/CustomModal';
 import { FetchData } from '../../config/functions';
 import UpdateModal from '../common/UpdateModal';
-import useAuth from '../../hooks/useAuth';
 import ConfirmationDialog from '../common/ConfirmationDialog';
 import UserDetails from './UserDetails';
 import Avatar from '@mui/material/Avatar';
+import './styles/Profile.css'
 
-const Profile = () => {
+const Profile = ({ socket }) => {
 
     const [myPosts, setMyPosts] = useState([])
 
@@ -65,40 +64,38 @@ const Profile = () => {
     }, [flag])
 
     const handleDeletePost = async () => {
-        const url = `http://localhost:5000/deletepost/${selectedId}`
-        const response = await FetchData(url, token, 'DELETE', null)
+        const url = `http://localhost:5000/deletepost/${selectedId}`;
+        const response = await FetchData(url, token, 'DELETE', null);
         if (response && response.data) {
-            setOpen(true)
-            setMessage(response.data.msg)
-            setSeverityVal("success")
-            handleGetUserPost()
-            setOpenConfirm(false)
+            setOpen(true);
+            setMessage(response.data.msg);
+            setSeverityVal("success");
+            handleGetUserPost();
+            setOpenConfirm(false);
         }
         else {
-            setOpen(true)
-            setMessage(response.err)
-            setSeverityVal("error")
+            setOpen(true);
+            setMessage(response.err);
+            setSeverityVal("error");
         }
     }
 
     const handleOpenModal = (title, desc, photo) => {
-        setModalTitle(title)
-        setModalDesc(desc)
-        setModalPhoto(photo)
-        setOpenModal(true)
+        setModalTitle(title);
+        setModalDesc(desc);
+        setModalPhoto(photo);
+        setOpenModal(true);
     }
 
     return (
         <>
             <div className='cover-div'>
-                {/* <div className='profile-div'>
-
-                </div> */}
                 <Avatar
-                    // alt={user.username}
                     src={profilePhoto}
                     sx={{
-                        width: 250, height: 250, backgroundColor: "var(--primary)",
+                        width: 250,
+                        height: 250,
+                        backgroundColor: "var(--primary)",
                         border: "5px solid var(--white)"
                     }}
                 />
@@ -109,6 +106,7 @@ const Profile = () => {
                 setUser={setUser}
                 isAuthId={userId}
                 setIsFriend={false}
+                socket={socket}
             />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>

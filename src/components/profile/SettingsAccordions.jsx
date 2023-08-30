@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Accordion from '@mui/material/Accordion';
 import Button from '@mui/material/Button';
@@ -7,12 +7,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import './styles/SettingsAccordions.css'
 import { FetchData } from '../../config/functions';
 import CustomAlert from '../common/CustomAlert';
+import './styles/SettingsAccordions.css'
 
 export default function SettingsAccordions({ setUser }) {
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     const token = localStorage.getItem("userToken");
     const user = JSON.parse(localStorage.getItem("userData"));
@@ -107,11 +107,25 @@ export default function SettingsAccordions({ setUser }) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography className='change-container'>
-                        <TextField id="standard-basic" label="Username" variant="standard" className='input-style' onChange={handleUsernameChange} value={username} />
+                        <TextField
+                            id="standard-basic"
+                            label="Username"
+                            variant="standard"
+                            className='input-style'
+                            onChange={handleUsernameChange}
+                            value={username}
+                        />
                         <Button
                             variant="contained"
                             className='modal-btn-style'
-                            disabled={(!username || (user.username === username)) ? true : false}
+                            disabled={(
+                                !username
+                                ||
+                                (user.username === username))
+                                ?
+                                true
+                                :
+                                false}
                             onClick={() => saveUsername()}>
                             Save Username
                         </Button>
@@ -128,13 +142,43 @@ export default function SettingsAccordions({ setUser }) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography className='change-container'>
-                        <TextField id="standard-basic" label="Current Password" type="password" variant="standard" className='input-style' onChange={handleOldPasswordChange} value={oldPassword} />
-                        <TextField id="standard-basic" label="New Password" type="password" variant="standard" className='input-style' onChange={handlePasswordChange} value={password} />
-                        <TextField id="standard-basic" label="Confirm New Password" type="password" variant="standard" className='input-style' onChange={handleCPasswordChange} value={cPassword} />
+                        <TextField
+                            id="standard-basic"
+                            label="Current Password"
+                            type="password"
+                            variant="standard"
+                            className='input-style'
+                            onChange={handleOldPasswordChange}
+                            value={oldPassword}
+                        />
+                        <TextField
+                            id="standard-basic"
+                            label="New Password"
+                            type="password"
+                            variant="standard"
+                            className='input-style'
+                            onChange={handlePasswordChange}
+                            value={password}
+                        />
+                        <TextField
+                            id="standard-basic"
+                            label="Confirm New Password"
+                            type="password"
+                            variant="standard"
+                            className='input-style'
+                            onChange={handleCPasswordChange}
+                            value={cPassword}
+                        />
                         <Button
                             variant="contained"
                             className='modal-btn-style'
-                            disabled={((!oldPassword || !password || !cPassword)) ? true : false}
+                            disabled={
+                                ((!oldPassword || !password || !cPassword))
+                                    ?
+                                    true
+                                    :
+                                    false
+                            }
                             onClick={() => savePassword()}>
                             Save Password
                         </Button>

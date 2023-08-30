@@ -6,21 +6,39 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
-import './styles/ProfilePostCard.css'
 import { FetchData } from '../../config/functions';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CustomAlert from '../common/CustomAlert'
-import useAuth from '../../hooks/useAuth';
 import MyComment from '../common/MyComment';
 import ConfirmationDialog from '../common/ConfirmationDialog';
+import './styles/ProfilePostCard.css'
 
 const ProfilePostCard =
-    ({ userId, postId, title, desc, photo, handleGetUserPost,
-        handleOpenModal, setOpenConfirm, selectedId, setSelectedId,
-        open, setOpen, message, severityVal, postedBy, setOpenUpdateModal,
-        setUpdatePostId, setUpdatePostTitle, setUpdatePostDesc, setUpdatePostPhoto,
-        setMessage, setSeverityVal }) => {
+    ({
+        userId,
+        postId,
+        title,
+        desc,
+        photo,
+        handleGetUserPost,
+        handleOpenModal,
+        setOpenConfirm,
+        selectedId,
+        setSelectedId,
+        open,
+        setOpen,
+        message,
+        severityVal,
+        postedBy,
+        setOpenUpdateModal,
+        setUpdatePostId,
+        setUpdatePostTitle,
+        setUpdatePostDesc,
+        setUpdatePostPhoto,
+        setMessage,
+        setSeverityVal
+    }) => {
 
         const [readMoreDesc, setReadMoreDesc] = useState('');
         const [show, setShow] = useState("Show More");
@@ -39,8 +57,6 @@ const ProfilePostCard =
         const [openConfirmComment, setOpenConfirmComment] = useState(false);
 
         const [commentId, setCommentId] = useState("")
-
-        // const { token } = useAuth()
 
         const navigate = useNavigate();
 
@@ -71,7 +87,7 @@ const ProfilePostCard =
         }
 
         const getUsername = async () => {
-            const url = `http://localhost:5000/getusername/${postedBy}`
+            const url = `http://localhost:5000/getusername/${postedBy}`;
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setUsername(response.data.username)
@@ -79,7 +95,7 @@ const ProfilePostCard =
         }
 
         const handleGetUserPostComments = async () => {
-            const url = `http://localhost:5000/getpostcomments/${postId}`
+            const url = `http://localhost:5000/getpostcomments/${postId}`;
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setComments(response.data)
@@ -112,7 +128,7 @@ const ProfilePostCard =
         }
 
         const handleDeleteComment = async () => {
-            const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`
+            const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`;
             const response = await FetchData(url, token, 'DELETE', null)
             if (response && response.data) {
                 setOpen(true)
@@ -130,7 +146,12 @@ const ProfilePostCard =
 
         const handleOtherProfiles = (username, createdBy) => {
             if (username !== authUsername) {
-                navigate(`/profile/${username}`, { state: { _id: createdBy } });
+                navigate(
+                    `/profile/${username}`,
+                    {
+                        state: { _id: createdBy }
+                    }
+                );
             }
             else {
                 navigate('/profile');
@@ -158,14 +179,40 @@ const ProfilePostCard =
                         <CardActionArea>
                             <CardMedia
                                 component="img"
-                                // height="140"
                                 image={photo}
                                 alt="profile post"
                                 onClick={() => handleOpenModal(title, desc, photo)}
                             />
-                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                                <EditIcon className='del-icon' style={{ float: "right", visibility: postedBy === userId ? "visible" : "hidden" }} onClick={() => handleEdit()} />
-                                <DeleteIcon className='del-icon' style={{ float: "right", visibility: postedBy === userId ? "visible" : "hidden" }} onClick={() => handleConfirmDelete()} />
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "flex-end"
+                                }}>
+                                <EditIcon
+                                    className='del-icon'
+                                    style={{
+                                        float: "right",
+                                        visibility: postedBy === userId
+                                            ?
+                                            "visible"
+                                            :
+                                            "hidden"
+                                    }}
+                                    onClick={() => handleEdit()}
+                                />
+                                <DeleteIcon
+                                    className='del-icon'
+                                    style={{
+                                        float: "right",
+                                        visibility: postedBy === userId
+                                            ?
+                                            "visible"
+                                            :
+                                            "hidden"
+                                    }}
+                                    onClick={() => handleConfirmDelete()}
+                                />
                             </div>
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div">
@@ -175,7 +222,18 @@ const ProfilePostCard =
                                     {title}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" onClick={handleDescLength}>
-                                    {readMoreDesc}<strong className='read-more' style={{ visibility: (desc.length > 150) ? "visible" : "hidden" }}>{showDesc}</strong>
+                                    {readMoreDesc}
+                                    <strong
+                                        className='read-more'
+                                        style={{
+                                            visibility: (desc.length > 150)
+                                                ?
+                                                "visible"
+                                                :
+                                                "hidden"
+                                        }}>
+                                        {showDesc}
+                                    </strong>
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
@@ -196,16 +254,36 @@ const ProfilePostCard =
 
                         <ul className='comment-style'>
                             {
-                                Array.isArray(subsetComments) && subsetComments.length > 0 && subsetComments?.map((comment) => {
+                                Array.isArray(subsetComments)
+                                &&
+                                subsetComments.length > 0
+                                &&
+                                subsetComments?.map((comment) => {
                                     const { _id, commentText, username, createdBy } = comment;
                                     return (
-                                        <Typography variant="caption" display="block" gutterBottom>
+                                        <Typography
+                                            variant="caption"
+                                            display="block"
+                                            gutterBottom
+                                        >
                                             <li>
-                                                <strong onClick={() => handleOtherProfiles(username, createdBy)} className='name-style'>{username}: </strong>
+                                                <strong
+                                                    onClick={() => handleOtherProfiles(username, createdBy)}
+                                                    className='name-style'
+                                                >
+                                                    {username}:
+                                                </strong>
                                                 {commentText}
                                                 <DeleteIcon
                                                     className='del-icon'
-                                                    style={{ float: "right", visibility: (createdBy === userId) ? "visible" : "hidden" }}
+                                                    style={{
+                                                        float: "right",
+                                                        visibility: (createdBy === userId)
+                                                            ?
+                                                            "visible"
+                                                            :
+                                                            "hidden"
+                                                    }}
                                                     onClick={() => handleConfirmDeleteComment(_id)}
                                                 />
                                                 <EditIcon
@@ -221,13 +299,33 @@ const ProfilePostCard =
                         </ul>
 
                         <CardActions onClick={() => handleTextLength()}>
-                            <Button size="small" color="primary" style={{ textTransform: "lowercase", visibility: (comments.length > 1) ? "visible" : "hidden" }}>
+                            <Button
+                                size="small"
+                                color="primary"
+                                style={{
+                                    textTransform: "lowercase",
+                                    visibility: (comments.length > 1)
+                                        ?
+                                        "visible"
+                                        :
+                                        "hidden"
+                                }}
+                            >
                                 {show}
                             </Button>
                         </CardActions>
                     </Card>
                 </div>
-                {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}
+                {
+                    open
+                    &&
+                    <CustomAlert
+                        open={open}
+                        setOpen={setOpen}
+                        severityVal={severityVal}
+                        message={message}
+                    />
+                }
                 {
                     openConfirmComment
                     &&

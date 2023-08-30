@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -9,8 +9,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import Avatar from '@mui/material/Avatar';
 import { FetchData } from '../../config/functions';
 import CustomAlert from '../common/CustomAlert';
@@ -49,14 +47,14 @@ export default function ShowRequests
     };
 
     const handleAcceptRequest = async (index, receivedUsername) => {
-        const url = `http://localhost:5000/acceptrequest`
+        const url = `http://localhost:5000/acceptrequest`;
         const body = JSON.stringify({
             accountId: userId,
             requestedId: receivedIds[index],
             accountUsername,
             receivedUsername
         })
-        const response = await FetchData(url, token, 'PUT', body)
+        const response = await FetchData(url, token, 'PUT', body);
         if (response && response.data) {
             console.log(response.data.msg)
             setSeverityVal("success");
@@ -81,12 +79,22 @@ export default function ShowRequests
 
     const list = (anchor) => (
         <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 300 }}
+            sx={{
+                width: anchor === 'top'
+                    ||
+                    anchor === 'bottom'
+                    ?
+                    'auto'
+                    :
+                    300
+            }}
             role="presentation"
-        // onClick={toggleDrawer(anchor, false)}
-        // onKeyDown={toggleDrawer(anchor, false)}
         >
-            <Typography variant="h5" gutterBottom style={{ margin: "5%" }}>
+            <Typography
+                variant="h5"
+                gutterBottom
+                style={{ margin: "5%" }}
+            >
                 Friend Requests
             </Typography>
             <List>
@@ -109,7 +117,11 @@ export default function ShowRequests
                 ))}
             </List>
             <Divider />
-            <Typography variant="h5" gutterBottom style={{ margin: "5%" }}>
+            <Typography
+                variant="h5"
+                gutterBottom
+                style={{ margin: "5%" }}
+            >
                 My Friends
             </Typography>
             <List>
@@ -124,7 +136,7 @@ export default function ShowRequests
                     </ListItem>
                 ))}
             </List>
-        </Box >
+        </Box>
     );
 
     return (
@@ -133,8 +145,16 @@ export default function ShowRequests
                 <React.Fragment key={anchor}>
                     <Button
                         variant='contained'
-                        style={{ backgroundColor: "var(--primary)", visibility: (isAuthId === userId) ? "visible" : "hidden" }}
-                        onClick={toggleDrawer(anchor, true)}>
+                        style={{
+                            backgroundColor: "var(--primary)",
+                            visibility: (isAuthId === userId)
+                                ?
+                                "visible"
+                                :
+                                "hidden"
+                        }}
+                        onClick={toggleDrawer(anchor, true)}
+                    >
                         Pending Requests
                     </Button>
                     <Drawer
@@ -146,7 +166,16 @@ export default function ShowRequests
                     </Drawer>
                 </React.Fragment>
             ))}
-            {open && <CustomAlert open={open} setOpen={setOpen} message={message} severityVal={severityVal} />}
+            {
+                open
+                &&
+                <CustomAlert
+                    open={open}
+                    setOpen={setOpen}
+                    message={message}
+                    severityVal={severityVal}
+                />
+            }
         </div>
     );
 }

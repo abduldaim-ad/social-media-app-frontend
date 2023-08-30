@@ -8,7 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
 import '../profile/styles/Profile.css';
 
-const OtherUserProfile = () => {
+const OtherUserProfile = ({ socket }) => {
 
     const location = useLocation();
     // const params = useParams();
@@ -91,7 +91,16 @@ const OtherUserProfile = () => {
                     }}
                 />
             </div>
-            <UserDetails username={user.username} email={user.email} setUser={setUser} isAuthId={_id} setIsFriend={setIsFriend} />
+
+            <UserDetails
+                username={user.username}
+                email={user.email}
+                setUser={setUser}
+                isAuthId={_id}
+                setIsFriend={setIsFriend}
+                socket={socket}
+            />
+
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
                 {

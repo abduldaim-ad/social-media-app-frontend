@@ -1,19 +1,15 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import SendIcon from '@mui/icons-material/Send';
-import useAuth from '../../hooks/useAuth';
-import { FetchData } from '../../config/functions';
-import CustomAlert from './CustomAlert';
+import axios from 'axios';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    height: 500,
+    height: 250,
     transform: 'translate(-50%, -50%)',
     width: "80%",
     bgcolor: 'background.paper',
@@ -44,7 +40,8 @@ export default function UpdateModal({
     const [descVal, setDescVal] = useState(desc)
     const [photoVal, setPhotoVal] = useState(photo)
 
-    const token = localStorage.getItem("userToken");
+    const user = JSON.parse(localStorage.getItem("userData"));
+    const userId = user._id;
 
     const handleClose = () => setOpenUpdateModal(false);
 
@@ -56,34 +53,24 @@ export default function UpdateModal({
         setDescVal(descRef.current.value)
     }
 
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
-
     const handlePhotoChange = async (e) => {
         const file = e.target.files[0];
-        const base64 = await convertToBase64(file);
-        setPhotoVal(base64);
+        setPhotoVal(file);
     }
 
     const handleUpdate = async () => {
-        const body = JSON.stringify({
-            _id: postId,
-            title: titleVal,
-            desc: descVal,
-            photo: photoVal
-        })
-        const url = `http://localhost:5000/updatepost`
-        const response = await FetchData(url, token, 'PUT', body)
+        const body = new FormData();
+        body.append("_id", postId);
+        body.append("my_file", photoVal);
+        body.append("title", titleVal);
+        body.append("desc", descVal);
+        body.append("userId", userId);
+
+        console.log("Check Here: ", postId, photoVal, titleVal, descVal, userId)
+
+        const url = `http://localhost:5000/updatepost`;
+        const response = await axios.put(url, body);
+        // const response = await FetchData(url, token, 'PUT', body)
         if (response && response.data) {
             // await getPosts();
             setFlag(!flag);
@@ -110,8 +97,6 @@ export default function UpdateModal({
                 >
                     <Box sx={style}>
                         <div className='post-div'>
-
-                            <img src={photoVal} alt={title} style={{ width: "100%" }} />
 
                             <input
                                 type="file"
@@ -146,10 +131,15 @@ export default function UpdateModal({
 
                                 <SendIcon className='create-btn' onClick={handleUpdate}
                                     style={{
-                                        visibility: (titleVal && descVal && photoVal && (photo !== photoVal || title !== titleVal || desc !== descVal))
-                                            ?
-                                            "visible"
-                                            : "hidden",
+                                        visibility:
+                                            (
+                                                titleVal && descVal && photoVal
+                                                &&
+                                                (photo !== photoVal || title !== titleVal || desc !== descVal)
+                                            )
+                                                ?
+                                                "visible"
+                                                : "hidden",
                                         top: "65px"
                                     }} />
 

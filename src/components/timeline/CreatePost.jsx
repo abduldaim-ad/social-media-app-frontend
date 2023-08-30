@@ -1,7 +1,7 @@
 import React from 'react'
-import './styles/CreatePost.css'
 import SendIcon from '@mui/icons-material/Send';
 import UploadImage from '../common/UploadImage';
+import './styles/CreatePost.css'
 
 const CreatePost =
     ({
@@ -34,7 +34,6 @@ const CreatePost =
                         <textarea
                             name=""
                             id=""
-                            // cols="80"
                             rows="2"
                             placeholder='Write Something...'
                             className='text-area'
@@ -42,8 +41,6 @@ const CreatePost =
                             onChange={handleDescChange}
                             ref={descRef}
                         ></textarea>
-
-                        {/* {photo && <img src={photo} alt={title} style={{ margin: "1% auto", width: "100%" }} />} */}
 
                         <UploadImage
                             file={file}
