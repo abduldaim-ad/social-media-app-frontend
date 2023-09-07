@@ -1,6 +1,12 @@
 import React from 'react'
-import SendIcon from '@mui/icons-material/Send';
+
+// Components
 import UploadImage from '../common/UploadImage';
+
+// MUI Icons
+import SendIcon from '@mui/icons-material/Send';
+
+// CSS
 import './styles/CreatePost.css'
 
 const CreatePost =
@@ -64,4 +70,4 @@ const CreatePost =
         )
     }
 
-export default CreatePost
+export default CreatePost;

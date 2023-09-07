@@ -1,14 +1,22 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import './styles/SignUp.css'
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import CustomAlert from '../common/CustomAlert';
 import axios from 'axios';
 
-const LogIn = ({ setLocal, socket }) => {
+// Context
+import { AuthContext } from '../../context';
+
+//Components
+import CustomAlert from '../common/CustomAlert';
+
+//MUI
+import { TextField } from '@mui/material';
+import { Button } from '@mui/material';
+
+//CSS
+import './styles/SignUp.css'
+
+const LogIn = () => {
 
     const navigate = useNavigate();
 
@@ -48,7 +56,7 @@ const LogIn = ({ setLocal, socket }) => {
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'http://localhost:5000/login',
+                url: '/login',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -64,11 +72,7 @@ const LogIn = ({ setLocal, socket }) => {
                         setSeverityVal("success")
                         localStorage.setItem("userToken", response.data.token)
                         localStorage.setItem("userData", JSON.stringify(response.data.user))
-                        const user = JSON.parse(localStorage.getItem("userData"));
-                        const senderId = user._id;
-                        socket.emit('register_user', senderId);
-                        setLocal(true)
-                        navigate('/')
+                        navigate('/timeline')
                     }
                 })
                 .catch((error) => {
@@ -86,12 +90,56 @@ const LogIn = ({ setLocal, socket }) => {
     return (
         <div className='main-div'>
             <div className='inner-div'>
+
                 <h1 className='heading'>Log In</h1>
-                <TextField id="email" name="email" label="Email" variant="standard" value={logInData.email} onChange={handleChange} className='tf' />
-                <TextField id="password" name="password" type='password' label="Password" variant="standard" value={logInData.password} onChange={handleChange} className='tf' />
-                <Button variant="contained" className='btn' onClick={() => handleClickLogIn()}>Log In</Button>
-                <Link to="/signup" className='link-style'>Not Registered? Sign Up Here</Link>
-                {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}
+
+                <TextField
+                    id="email"
+                    name="email"
+                    label="Email"
+                    variant="standard"
+                    value={logInData.email}
+                    onChange={handleChange}
+                    className='tf'
+                />
+
+                <TextField
+                    id="password"
+                    name="password"
+                    type='password'
+                    label="Password"
+                    variant="standard"
+                    value={logInData.password}
+                    onChange={handleChange}
+                    className='tf'
+                />
+
+                <Button
+                    variant="contained"
+                    className='btn'
+                    onClick={() => handleClickLogIn()}
+                >
+                    Log In
+                </Button>
+
+                <Link
+                    to="/signup"
+                    className='link-style'
+                >
+                    Not Registered? Sign Up Here
+                </Link>
+
+                {
+                    open
+                    &&
+                    <CustomAlert
+                        open={open}
+                        setOpen={setOpen}
+                        severityVal={severityVal}
+                        message={message}
+                    />
+                }
+
             </div>
         </div>
     )

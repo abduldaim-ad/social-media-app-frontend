@@ -1,21 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import UserDetails from '../profile/UserDetails';
+import React, { useEffect, useState, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
-import ProfilePostCard from '../profile/ProfilePostCard'
+
+// Components
+import ProfilePostCard from '../profile/ProfilePostCard';
+import UserDetails from '../profile/UserDetails';
 import CustomModal from '../common/CustomModal';
+
+// MUI
 import Avatar from '@mui/material/Avatar';
-import Paper from '@mui/material/Paper';
+
+// CSS
 import '../profile/styles/Profile.css';
 
-const OtherUserProfile = ({ socket }) => {
+const OtherUserProfile = () => {
+
+    const authData = useContext(AuthContext);
 
     const location = useLocation();
-    // const params = useParams();
-    // console.log("Params", params, location);
 
-    const token = localStorage.getItem("userToken");
-    const userData = JSON.parse(localStorage.getItem("userData"));
+    const { token, socket } = authData;
+
+    const userData = authData.user;
     const userId = userData._id;
 
     const [user, setUser] = useState({});
@@ -45,7 +56,7 @@ const OtherUserProfile = ({ socket }) => {
     }
 
     const getUserDetails = async () => {
-        const url = `http://localhost:5000/getuserdetails/${_id}`;
+        const url = `/getuserdetails/${_id}`;
         const response = await FetchData(url, token, 'GET', null);
         if (response && response.data) {
             setUser(response.data)
@@ -61,7 +72,7 @@ const OtherUserProfile = ({ socket }) => {
     const handleGetUserPost = async () => {
         console.log("YesIsFriend", isFriend)
         if (isFriend) {
-            const url = `http://localhost:5000/getuserposts/${_id}`;
+            const url = `/getuserposts/${_id}`;
             const response = await FetchData(url, token, 'GET', null);
             if (response && response.data) {
                 setMyPosts([])
@@ -79,14 +90,16 @@ const OtherUserProfile = ({ socket }) => {
     return (
         <>
             <div className='cover-div'>
-                {/* <div className='profile-div'>
-
-                </div> */}
                 <Avatar
-                    // alt={user.username}
                     src="/static/images/avatar/1.jpg"
                     sx={{
-                        width: 250, height: 250, backgroundColor: isFriend ? "var(--secondary)" : "var(--grey)",
+                        width: 250,
+                        height: 250,
+                        backgroundColor: isFriend
+                            ?
+                            "var(--secondary)"
+                            :
+                            "var(--grey)",
                         border: "5px solid var(--white)"
                     }}
                 />
@@ -139,4 +152,4 @@ const OtherUserProfile = ({ socket }) => {
     )
 }
 
-export default OtherUserProfile
+export default OtherUserProfile;

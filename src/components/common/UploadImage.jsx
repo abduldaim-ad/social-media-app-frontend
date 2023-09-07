@@ -7,6 +7,7 @@ const ImageCreatePost =
     }) => {
 
         const handleSelectFile = (e) => setFile(e.target.files[0]);
+
         return (
             <>
                 <div className="App">
@@ -21,4 +22,4 @@ const ImageCreatePost =
         )
     }
 
-export default ImageCreatePost
+export default ImageCreatePost;

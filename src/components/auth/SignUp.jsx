@@ -1,13 +1,17 @@
-/* eslint-disable no-unused-vars */
-import React, { useRef, useState } from 'react'
-import './styles/SignUp.css'
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+
+// Components
 import CustomAlert from '../common/CustomAlert';
 import UploadImage from '../common/UploadImage';
-import axios from 'axios';
+
+// MUI
+import { TextField } from '@mui/material';
+import { Button } from '@mui/material';
+
+// CSS
+import './styles/SignUp.css'
 
 const SignUp = () => {
 
@@ -17,12 +21,14 @@ const SignUp = () => {
     const [message, setMessage] = useState("")
     const [severityVal, setSeverityVal] = useState("")
 
-    const [signUpData, setSignUpData] = useState({
+    const initialState = {
         username: "",
         email: "",
         password: "",
         cPassword: ""
-    });
+    }
+
+    const [signUpData, setSignUpData] = useState(initialState);
 
     const [file, setFile] = useState(null);
 
@@ -32,24 +38,23 @@ const SignUp = () => {
             ...signUpData,
             [name]: value
         })
-
-    }
-
-    const isValidEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
     }
 
     const handleClickSignUp = async () => {
-        // setSignUpData(
-        //     ...signUpData,
-        //     {
-        //         username: "",
-        //         email: "",
-        //         password: "",
-        //         cPassword: ""
-        //     })
 
         const { username, email, password, cPassword } = signUpData;
+
+        if (!username || !email || !password || !cPassword || !file) {
+            setMessage("Please Fill All the Fields!");
+            setSeverityVal("error");
+            setOpen(true);
+            return;
+        } else if (password !== cPassword) {
+            setMessage("Passwords Did Not Match!");
+            setSeverityVal("error");
+            setOpen(true);
+            return;
+        }
 
         const body = new FormData();
         body.append("my_file", file);
@@ -58,76 +63,98 @@ const SignUp = () => {
         body.append("password", password);
         body.append("cPassword", cPassword);
 
-        const res = await axios.post("http://localhost:5000/signup", body);
+        const response = await axios.post("/signup", body);
 
-        // const { username, email, password, cPassword } = signUpData;
-        // if (!username || !email || !password || !cPassword) {
-        //     setOpen(true)
-        //     setMessage("Please Fill All the Fields!")
-        //     setSeverityVal("error")
-        // }
-        // else if (!isValidEmail(email)) {
-        //     setOpen(true)
-        //     setMessage("Incorrect Email Format!")
-        //     setSeverityVal("error")
-        // }
-        // else if (password !== cPassword) {
-        //     setOpen(true)
-        //     setMessage("Passwords Did Not Match!")
-        //     setSeverityVal("error")
-        // }
-        // else {
-        //     let data = JSON.stringify({
-        //         username,
-        //         email,
-        //         password,
-        //         cPassword
-        //     });
+        if (response && response.data) {
+            setMessage(response.data.msg);
+            setSeverityVal("success");
+            setOpen(true);
+            // setSignUpData(initialState);
+            navigate('/login');
+        }
+        else {
+            setMessage("Error While Signing Up!");
+            setSeverityVal("error");
+            setOpen(true);
+        }
 
-        //     let config = {
-        //         method: 'post',
-        //         maxBodyLength: Infinity,
-        //         url: 'http://localhost:5000/signup',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         data: data
-        //     };
-
-        //     axios.request(config)
-        //         .then((response) => {
-        //             setOpen(true)
-        //             setMessage(response.data.msg)
-        //             setSeverityVal("success")
-        //             navigate('/login')
-        //         })
-        //         .catch((error) => {
-        //             setOpen(true)
-        //             setMessage(error.response.data.err)
-        //             setSeverityVal("error")
-        //         });
-        // }
     }
 
     return (
         <div className='main-div'>
             <div className='inner-div'>
+
                 <h1 className='heading'>Sign Up</h1>
-                <TextField id="username" name="username" label="Username" variant="standard"
-                    onChange={(e) => handleChange(e)} className='tf' />
-                <TextField id="email" name="email" label="Email" variant="standard"
-                    onChange={(e) => handleChange(e)} className='tf' />
-                <TextField id="password" name="password" type='password' label="Password" variant="standard"
-                    onChange={(e) => handleChange(e)} className='tf' />
-                <TextField id="confirmPassword" name="cPassword" type='password' label="Confirm Password" variant="standard"
-                    onChange={(e) => handleChange(e)} className='tf' />
+
+                <TextField
+                    id="username"
+                    name="username"
+                    label="Username"
+                    variant="standard"
+                    onChange={(e) => handleChange(e)}
+                    className='tf'
+                />
+
+                <TextField
+                    id="email"
+                    name="email"
+                    label="Email"
+                    variant="standard"
+                    onChange={(e) => handleChange(e)}
+                    className='tf'
+                />
+
+                <TextField
+                    id="password"
+                    name="password"
+                    type='password'
+                    label="Password"
+                    variant="standard"
+                    onChange={(e) => handleChange(e)}
+                    className='tf'
+                />
+
+                <TextField
+                    id="confirmPassword"
+                    name="cPassword"
+                    type='password'
+                    label="Confirm Password"
+                    variant="standard"
+                    onChange={(e) => handleChange(e)}
+                    className='tf'
+                />
+
                 <UploadImage
                     file={file}
                     setFile={setFile}
                 />
-                <Button variant="contained" className='btn' onClick={() => handleClickSignUp()}>Sign Up</Button>
-                <Link to="/login" className='link-style'>Already a User? Login Here</Link>
-                {open && <CustomAlert open={open} setOpen={setOpen} severityVal={severityVal} message={message} />}
+
+                <Button
+                    variant="contained"
+                    className='btn'
+                    onClick={() => handleClickSignUp()}
+                >
+                    Sign Up
+                </Button>
+
+                <Link
+                    to="/login"
+                    className='link-style'
+                >
+                    Already a User? Login Here
+                </Link>
+
+                {
+                    open
+                    &&
+                    <CustomAlert
+                        open={open}
+                        setOpen={setOpen}
+                        severityVal={severityVal}
+                        message={message}
+                    />
+                }
+
             </div>
         </div>
     )

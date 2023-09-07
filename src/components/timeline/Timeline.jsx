@@ -1,26 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import axios from 'axios';
-import CustomAlert from '../common/CustomAlert';
-import CreatePost from './CreatePost';
-import CustomModal from '../common/CustomModal';
-import PostTimeline from './PostTimeline';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
+
+// Components
+import CustomAlert from '../common/CustomAlert';
+import CustomModal from '../common/CustomModal';
 import UpdateModal from '../common/UpdateModal';
-import './styles/Timeline.css'
+import CreatePost from './CreatePost';
+import PostTimeline from './PostTimeline';
 
-const Timeline = () => {
+// CSS
+import './styles/Timeline.css';
 
-    const [allPosts, setAllPosts] = useState([])
-    const [title, setTitle] = useState("")
-    const [desc, setDesc] = useState("")
-    const [photo, setPhoto] = useState("")
+const Timeline = ({ local }) => {
 
-    const [modalTitle, setModalTitle] = useState("")
-    const [modalDesc, setModalDesc] = useState("")
+    const { token, user } = useContext(AuthContext);
+
+    const [allPosts, setAllPosts] = useState([]);
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const [photo, setPhoto] = useState("");
+
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalDesc, setModalDesc] = useState("");
 
     const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState("")
-    const [severityVal, setSeverityVal] = useState("")
+    const [message, setMessage] = useState("");
+    const [severityVal, setSeverityVal] = useState("");
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -33,16 +44,14 @@ const Timeline = () => {
 
     const [file, setFile] = useState(null);
 
-    const titleRef = useRef()
-    const descRef = useRef()
+    const titleRef = useRef();
+    const descRef = useRef();
 
-    const token = localStorage.getItem("userToken")
-    const user = JSON.parse(localStorage.getItem("userData"))
     const userId = user._id;
 
     const handleGetUserPost = async () => {
 
-        const url = 'http://localhost:5000/getallposts';
+        const url = '/getallposts';
         const response = await FetchData(url, token, 'GET', null)
         if (response && response.data) {
             setAllPosts(response.data)
@@ -78,7 +87,7 @@ const Timeline = () => {
         }
         else {
 
-            const url = "http://localhost:5000/createpost"
+            const url = "/createpost"
             const body = new FormData();
             body.append("my_file", file);
             body.append("title", title);
@@ -193,4 +202,4 @@ const Timeline = () => {
     )
 }
 
-export default Timeline
+export default Timeline;

@@ -1,11 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import EditIcon from '@mui/icons-material/Edit';
-import Typography from '@mui/material/Typography';
-import ModalUserDetails from './ModalUserDetails';
-import { Button } from '@mui/material'
-import './styles/UserDetails.css';
+import React, { useEffect, useState, useContext } from 'react'
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
+
+// Components
 import ShowRequests from './ShowRequests';
+import ModalUserDetails from './ModalUserDetails';
+
+// MUI
+import { Button, Typography, Tooltip } from '@mui/material';
+
+// MUI Icons
+import EditIcon from '@mui/icons-material/Edit';
+
+// CSS
+import './styles/UserDetails.css';
+import CustomAlert from '../common/CustomAlert';
 
 const UserDetails =
     ({
@@ -14,8 +27,9 @@ const UserDetails =
         setUser,
         isAuthId,
         setIsFriend,
-        socket
     }) => {
+
+        const { token, user, socket } = useContext(AuthContext);
 
         const [open, setOpen] = useState(false);
         const [isRequested, setIsRequested] = useState(true);
@@ -24,13 +38,15 @@ const UserDetails =
         const [receivedIds, setReceivedIds] = useState([]);
         const [friendsList, setFriendsList] = useState([]);
 
-        const token = localStorage.getItem("userToken");
-        const user = JSON.parse(localStorage.getItem("userData"));
+        const [openAlert, setOpenAlert] = useState(false);
+        const [message, setMessage] = useState("");
+        const [severityVal, setSeverityVal] = useState("");
+
         const { _id } = user;
         const accountUsername = user.username;
 
         const checkRequest = async () => {
-            const url = `http://localhost:5000/getuserdetails/${_id}`;
+            const url = `/getuserdetails/${_id}`;
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 if (response.data.receivedUsername.includes(username)) {
@@ -38,8 +54,8 @@ const UserDetails =
                     setRequestButton("Accept Request");
                 }
                 else if (response.data.requestedId.includes(isAuthId)) {
-                    setIsRequested(true);
-                    setRequestButton("Request Pending");
+                    setIsRequested(false);
+                    setRequestButton("Cancel Request");
                 }
                 else if (response.data.friendsUsername.includes(username)) {
                     setIsRequested(true);
@@ -56,6 +72,11 @@ const UserDetails =
             }
         }
 
+        socket.on("receive_request", (data) => {
+            console.log("I am running");
+            checkRequest();
+        })
+
         useEffect(() => {
             checkRequest();
         }, [username])
@@ -66,7 +87,7 @@ const UserDetails =
 
         const handleSendRequest = async () => {
             if (requestButton === "Add Friend") {
-                const url = `http://localhost:5000/sendrequest`;
+                const url = `/sendrequest`;
                 const body = JSON.stringify({
                     accountId: _id,
                     requestedId: isAuthId,
@@ -74,12 +95,29 @@ const UserDetails =
                 })
                 const response = await FetchData(url, token, 'PUT', body);
                 if (response && response.data) {
-                    console.log(response.data.msg);
                     sendFriendRequest(_id, isAuthId);
+                    setMessage(response.data.msg);
+                    setSeverityVal("success");
+                    setOpenAlert(true);
+                }
+            }
+            else if (requestButton === "Cancel Request") {
+                const url = `/cancelrequest`;
+                const body = JSON.stringify({
+                    accountId: _id,
+                    requestedId: isAuthId,
+                    receivedUsername: accountUsername
+                })
+                const response = await FetchData(url, token, 'PUT', body);
+                if (response && response.data) {
+                    sendFriendRequest(_id, isAuthId);
+                    setMessage(response.data.msg);
+                    setSeverityVal("success");
+                    setOpenAlert(true);
                 }
             }
             else if (requestButton === "Accept Request") {
-                const url = `http://localhost:5000/acceptrequest`;
+                const url = `/acceptrequest`;
                 const body = JSON.stringify({
                     accountId: _id,
                     requestedId: isAuthId,
@@ -88,7 +126,9 @@ const UserDetails =
                 })
                 const response = await FetchData(url, token, 'PUT', body)
                 if (response && response.data) {
-                    console.log(response.data.msg);
+                    setMessage(response.data.msg);
+                    setSeverityVal("success");
+                    setOpenAlert(true);
                 }
             }
             checkRequest();
@@ -102,17 +142,19 @@ const UserDetails =
                         gutterBottom
                     >
                         {username}
-                        <EditIcon
-                            style={{
-                                visibility: (isAuthId === _id)
-                                    ?
-                                    "visible"
-                                    :
-                                    "hidden"
-                            }}
-                            className='del-icon'
-                            onClick={() => setOpen(true)}
-                        />
+                        <Tooltip title="Update Profile">
+                            <EditIcon
+                                style={{
+                                    visibility: (isAuthId === _id)
+                                        ?
+                                        "visible"
+                                        :
+                                        "hidden"
+                                }}
+                                className='del-icon'
+                                onClick={() => setOpen(true)}
+                            />
+                        </Tooltip>
                         <Button
                             variant="contained"
                             style={{
@@ -146,9 +188,19 @@ const UserDetails =
                         checkRequest={checkRequest}
                     />
                     {open && <ModalUserDetails open={open} setOpen={setOpen} setUser={setUser} />}
+                    {
+                        openAlert
+                        &&
+                        <CustomAlert
+                            open={openAlert}
+                            setOpen={setOpenAlert}
+                            message={message}
+                            severityVal={severityVal}
+                        />
+                    }
                 </div>
             </>
         )
     }
 
-export default UserDetails
+export default UserDetails;

@@ -1,21 +1,36 @@
-import * as React from 'react';
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Accordion from '@mui/material/Accordion';
-import Button from '@mui/material/Button';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React from 'react';
+import { useState, useContext } from 'react';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
+
+// Components
 import CustomAlert from '../common/CustomAlert';
+
+// MUI
+import {
+    TextField,
+    Accordion,
+    Button,
+    AccordionDetails,
+    AccordionSummary,
+    Typography
+} from '@mui/material';
+
+// MUI Icons
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+// CSS
 import './styles/SettingsAccordions.css'
 
-export default function SettingsAccordions({ setUser }) {
-    const [expanded, setExpanded] = useState(false);
+const SettingsAccordions = ({ setUser }) => {
 
-    const token = localStorage.getItem("userToken");
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const { token, user } = useContext(AuthContext);
+
+    const [expanded, setExpanded] = useState(false);
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -51,7 +66,7 @@ export default function SettingsAccordions({ setUser }) {
             _id: user._id,
             username
         })
-        const url = "http://localhost:5000/updateusername";
+        const url = "/updateusername";
         const response = await FetchData(url, token, 'PUT', body);
         if (response && response.data) {
             user.username = username;
@@ -76,7 +91,7 @@ export default function SettingsAccordions({ setUser }) {
             password,
             cPassword
         })
-        const url = "http://localhost:5000/updatepassword";
+        const url = "/updatepassword";
         const response = await FetchData(url, token, 'PUT', body);
         if (response && response.data) {
             setOldPassword("");
@@ -105,6 +120,7 @@ export default function SettingsAccordions({ setUser }) {
                         Change Username
                     </Typography>
                 </AccordionSummary>
+
                 <AccordionDetails>
                     <Typography className='change-container'>
                         <TextField
@@ -132,6 +148,7 @@ export default function SettingsAccordions({ setUser }) {
                     </Typography>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -140,6 +157,7 @@ export default function SettingsAccordions({ setUser }) {
                 >
                     <Typography sx={{ width: '40%', flexShrink: 0 }}>Change Password</Typography>
                 </AccordionSummary>
+
                 <AccordionDetails>
                     <Typography className='change-container'>
                         <TextField
@@ -200,3 +218,5 @@ export default function SettingsAccordions({ setUser }) {
         </div>
     );
 }
+
+export default SettingsAccordions;

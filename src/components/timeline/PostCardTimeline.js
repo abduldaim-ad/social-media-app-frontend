@@ -1,10 +1,18 @@
 import React from 'react';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+
+// MUI
+import {
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Typography
+} from '@mui/material';
+
+// MUI Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { CardActionArea } from '@mui/material';
+
+// CSS
 import './styles/PostCardTimeline.css';
 
 const PostCardTimeline =
@@ -122,4 +130,4 @@ const PostCardTimeline =
         )
     }
 
-export default PostCardTimeline
+export default PostCardTimeline;

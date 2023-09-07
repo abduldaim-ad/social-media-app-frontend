@@ -1,18 +1,32 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-import { Button, CardActions } from '@mui/material';
-import './styles/PostTimeline.css'
-import MyComment from '../common/MyComment';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
+
+// Components
+import MyComment from '../common/MyComment';
+import ConfirmationDialog from '../common/ConfirmationDialog';
 import PostCardTimeline from './PostCardTimeline';
+
+// MUI
+import {
+    Button,
+    CardActions,
+    Card,
+    Typography
+} from '@mui/material';
+
+// MUI Icons
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import useAuth from '../../hooks/useAuth';
-import ConfirmationDialog from '../common/ConfirmationDialog';
-import CustomAlert from '../common/CustomAlert';
-import { useNavigate } from 'react-router-dom';
+
+// CSS
+import './styles/PostTimeline.css'
 
 const PostTimeline =
     ({
@@ -36,7 +50,7 @@ const PostTimeline =
         setSeverityVal
     }) => {
 
-        const token = localStorage.getItem("userToken");
+        const { token, user } = useContext(AuthContext);
 
         const [comments, setComments] = useState([])
 
@@ -59,13 +73,12 @@ const PostTimeline =
 
         const [username, setUsername] = useState("");
 
-        const user = JSON.parse(localStorage.getItem("userData"));
         const authUsername = user.username;
 
         const navigate = useNavigate();
 
         const handleDeletePost = async () => {
-            const url = `http://localhost:5000/deletepost/${selectedId}`
+            const url = `/deletepost/${selectedId}`
             const response = await FetchData(url, token, 'DELETE', null)
             if (response && response.data) {
                 setOpen(true)
@@ -104,7 +117,7 @@ const PostTimeline =
         }
 
         const handleGetPostComments = async () => {
-            const url = `http://localhost:5000/getpostcomments/${postId}`;
+            const url = `/getpostcomments/${postId}`;
             const response = await FetchData(url, token, 'GET', null);
             if (response && response.data) {
                 setComments(response.data)
@@ -112,7 +125,7 @@ const PostTimeline =
         }
 
         const getUsername = async () => {
-            const url = `http://localhost:5000/getusername/${postedBy}`
+            const url = `/getusername/${postedBy}`
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setUsername(response.data.username)
@@ -132,7 +145,7 @@ const PostTimeline =
         }
 
         const handleDeleteComment = async () => {
-            const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`
+            const url = `/deletecomment/${commentId}/${selectedId}`
             const response = await FetchData(url, token, 'DELETE', null)
             if (response && response.data) {
                 setOpen(true)

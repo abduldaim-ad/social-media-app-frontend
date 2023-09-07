@@ -1,25 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
 
+// MUI
+import { InputAdornment, Autocomplete, TextField } from '@mui/material';
+
+// MUI Icons
+import SearchIcon from '@mui/icons-material/Search';
+
 const SearchUser = () => {
+
+    const { token, user } = useContext(AuthContext);
 
     const [searchUser, setSearchUser] = useState("");
     const [foundUsers, setFoundUsers] = useState([]);
 
     const navigate = useNavigate();
 
-    const token = localStorage.getItem("userToken");
-    const user = localStorage.getItem("userData");
-    const authUsername = user.username;
+    const authUsername = user?.username;
 
     const getUsers = async (e) => {
         setSearchUser(e.target.value);
-        const url = `http://localhost:5000/searchusers/${e.target.value}`;
+        const url = `https://facebook-fbclone.vercel.app/searchusers/${e.target.value}`;
         const response = await FetchData(url, token, 'GET', null);
         if (response && response.data) {
             setFoundUsers(response.data);
@@ -70,4 +77,4 @@ const SearchUser = () => {
     )
 }
 
-export default SearchUser
+export default SearchUser;

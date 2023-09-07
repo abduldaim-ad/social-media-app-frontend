@@ -1,44 +1,51 @@
-import React, { useState, useEffect } from "react";
-import './styles/Navbar.css'
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import SearchUser from "./SearchUser";
-import Badge from '@mui/material/Badge';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from "../../config/functions";
 
-const Navbar = ({ local, setLocal, socket, io }) => {
+// Components
+import SearchUser from "./SearchUser";
+
+// MUI
+import { Button, Badge } from "@mui/material";
+
+// MUI Icons
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+// CSS
+import './styles/Navbar.css';
+
+const Navbar = () => {
 
     const [totalRequests, setTotalRequests] = useState();
 
     const navigate = useNavigate();
 
+    const { token, user, socket } = useContext(AuthContext);
+
     const handleLogOut = () => {
         localStorage.clear()
-        setLocal(false)
     }
 
     const checkRequest = async () => {
-        const token = localStorage.getItem("userToken");
-        const user = JSON.parse(localStorage.getItem("userData"));
-        const { _id } = user;
-        const url = `http://localhost:5000/getuserdetails/${_id}`
-        const response = await FetchData(url, token, 'GET', null)
-        console.log("Here is: ", response.data)
-        if (response && response.data) {
-            setTotalRequests(response.data.receivedUsername.length);
+        if (user) {
+            const { _id } = user;
+            const url = `/getuserdetails/${_id}`;
+            const response = await FetchData(url, token, 'GET', null);
+            if (response && response.data) {
+                setTotalRequests(response.data.receivedUsername.length);
+            }
         }
     }
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log("Socket connected:", socket.connected);
-        });
-    }, [])
-
     socket.on("receive_request", (data) => {
+        console.log("I am running");
         checkRequest();
     })
 
@@ -50,6 +57,7 @@ const Navbar = ({ local, setLocal, socket, io }) => {
         <>
             <div className="navbar">
                 <ul className="nav-links">
+
                     <img
                         src="https://www.freeiconspng.com/uploads/facebook-logo-4.png"
                         alt=""
@@ -57,75 +65,41 @@ const Navbar = ({ local, setLocal, socket, io }) => {
                             width: "40px"
                         }}
                     />
-                    {local
-                        &&
-                        <Link to="/" className="link">
-                            <Button className="btn-style">
-                                Timeline
-                            </Button>
-                        </Link>}
+                    <Link to="/timeline" className="link">
+                        <Button className="btn-style">
+                            Timeline
+                        </Button>
+                    </Link>
+
                     <div className="right-btn">
-                        {local && <SearchUser />}
-                        {
-                            local
-                            &&
-                            <Badge
-                                badgeContent={totalRequests}
-                                color="primary"
-                                className="badge"
-                                onClick={() => navigate('/profile')}
-                            >
-                                <PersonAddIcon className="badge-icon" />
-                            </Badge>
-                        }
-                        {
-                            local
-                            &&
-                            <Link
-                                to="/profile"
-                                className="link"
-                            >
-                                <Button className="btn-style profile-icon">
-                                    <AccountCircleIcon />
-                                </Button>
-                            </Link>
-                        }
-                        {
-                            !local
-                            &&
-                            <Link
-                                to="/signup"
-                                className="link"
-                            >
-                                <Button className="btn-style signup-style">
-                                    Sign Up
-                                </Button>
-                            </Link>
-                        }
-                        {
-                            !local
-                            &&
-                            <Link
-                                to="/login"
-                                className="link"
-                            >
-                                <Button className="btn-style login-style">
-                                    Log In
-                                </Button>
-                            </Link>
-                        }
-                        {
-                            local
-                            &&
-                            <Link
-                                to="/login"
-                                className="link"
-                            >
-                                <Button className="btn-style logout-icon" onClick={handleLogOut}>
-                                    <LogoutIcon />
-                                </Button>
-                            </Link>
-                        }
+
+                        <SearchUser />
+                        <Badge
+                            badgeContent={totalRequests}
+                            color="primary"
+                            className="badge"
+                            onClick={() => navigate('/profile')}
+                        >
+                            <PersonAddIcon className="badge-icon" />
+                        </Badge>
+
+                        <Link
+                            to="/profile"
+                            className="link"
+                        >
+                            <Button className="btn-style profile-icon">
+                                <AccountCircleIcon />
+                            </Button>
+                        </Link>
+
+
+                        <Link to="/login" className="link">
+                            <Button className="btn-style logout-icon" onClick={handleLogOut}>
+                                <LogoutIcon />
+                            </Button>
+                        </Link>
+
+
                     </div>
                 </ul>
             </div>

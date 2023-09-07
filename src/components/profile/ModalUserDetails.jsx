@@ -1,8 +1,10 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+
+// Components
 import SettingsAccordions from './SettingsAccordions';
+
+// MUI
+import { Box, Typography, Modal } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -22,6 +24,7 @@ const ModalUserDetails =
         setOpen,
         setUser
     }) => {
+
         const handleClose = () => setOpen(false);
 
         return (

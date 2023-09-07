@@ -1,15 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
+import { FetchData } from '../../config/functions';
+
+// Components
+import UserDetails from './UserDetails';
 import ProfilePostCard from './ProfilePostCard'
 import CustomModal from '../common/CustomModal';
-import { FetchData } from '../../config/functions';
 import UpdateModal from '../common/UpdateModal';
 import ConfirmationDialog from '../common/ConfirmationDialog';
-import UserDetails from './UserDetails';
-import Avatar from '@mui/material/Avatar';
+
+// MUI
+import { Avatar } from '@mui/material';
+
+// CSS
 import './styles/Profile.css'
 
-const Profile = ({ socket }) => {
+const Profile = () => {
 
+    const authData = useContext(AuthContext);
+
+    const { token, socket } = authData;
+
+    console.log("isSocketConnectedProfile", socket.connected)
     const [myPosts, setMyPosts] = useState([])
 
     const [modalTitle, setModalTitle] = useState("")
@@ -36,14 +52,13 @@ const Profile = ({ socket }) => {
     const [updatePostDesc, setUpdatePostDesc] = useState("");
     const [updatePostPhoto, setUpdatePostPhoto] = useState("");
 
-    const token = localStorage.getItem("userToken");
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")));
+    const [user, setUser] = useState(authData.user);
 
     const { _id } = user;
     const userId = _id;
 
     const handleGetUserPost = async () => {
-        const url = `http://localhost:5000/getuserposts/${userId}`;
+        const url = `/getuserposts/${userId}`;
         const response = await FetchData(url, token, 'GET', null);
         if (response && response.data) {
             setMyPosts(response.data)
@@ -51,7 +66,7 @@ const Profile = ({ socket }) => {
     }
 
     const getProfilePhoto = async () => {
-        const url = `http://localhost:5000/getuserdetails/${userId}`
+        const url = `/getuserdetails/${userId}`
         const response = await FetchData(url, token, 'GET', null)
         if (response && response.data) {
             setProfilePhoto(response.data.profilePhoto);
@@ -64,7 +79,7 @@ const Profile = ({ socket }) => {
     }, [flag])
 
     const handleDeletePost = async () => {
-        const url = `http://localhost:5000/deletepost/${selectedId}`;
+        const url = `/deletepost/${selectedId}`;
         const response = await FetchData(url, token, 'DELETE', null);
         if (response && response.data) {
             setOpen(true);
@@ -106,7 +121,6 @@ const Profile = ({ socket }) => {
                 setUser={setUser}
                 isAuthId={userId}
                 setIsFriend={false}
-                socket={socket}
             />
             <h1 className='recent-heading'>Recent Posts</h1>
             <div className='card-div'>
@@ -167,7 +181,7 @@ const Profile = ({ socket }) => {
                 setOpenModal={setOpenModal}
                 modalTitle={modalTitle}
                 modalDesc={modalDesc}
-                modalPhoto={modalPhoto}
+                photo={modalPhoto}
             />
 
             {
@@ -184,4 +198,4 @@ const Profile = ({ socket }) => {
     )
 }
 
-export default Profile
+export default Profile;

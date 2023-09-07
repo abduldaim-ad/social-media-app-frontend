@@ -1,9 +1,15 @@
-import * as React from 'react';
-import { useState, useRef } from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import SendIcon from '@mui/icons-material/Send';
+import React from 'react';
+import { useState, useRef, useContext } from 'react';
 import axios from 'axios';
+
+// Context
+import { AuthContext } from '../../context';
+
+// MUI
+import { Box, Modal } from '@mui/material';
+
+// MUI Icons
+import SendIcon from '@mui/icons-material/Send';
 
 const style = {
     position: 'absolute',
@@ -33,6 +39,8 @@ export default function UpdateModal({
     flag,
     setFlag
 }) {
+    const { user } = useContext(AuthContext);
+
     const titleRef = useRef()
     const descRef = useRef()
 
@@ -40,7 +48,6 @@ export default function UpdateModal({
     const [descVal, setDescVal] = useState(desc)
     const [photoVal, setPhotoVal] = useState(photo)
 
-    const user = JSON.parse(localStorage.getItem("userData"));
     const userId = user._id;
 
     const handleClose = () => setOpenUpdateModal(false);
@@ -66,13 +73,10 @@ export default function UpdateModal({
         body.append("desc", descVal);
         body.append("userId", userId);
 
-        console.log("Check Here: ", postId, photoVal, titleVal, descVal, userId)
-
-        const url = `http://localhost:5000/updatepost`;
+        const url = `/updatepost`;
         const response = await axios.put(url, body);
-        // const response = await FetchData(url, token, 'PUT', body)
+
         if (response && response.data) {
-            // await getPosts();
             setFlag(!flag);
             setOpenUpdateModal(false);
             setOpen(true);
@@ -139,7 +143,8 @@ export default function UpdateModal({
                                             )
                                                 ?
                                                 "visible"
-                                                : "hidden",
+                                                :
+                                                "hidden",
                                         top: "65px"
                                     }} />
 

@@ -18,7 +18,7 @@
 }
 
 .btn-style{
-    width: 6rem !important;
+    width: 3rem !important;
     padding: 1% 5%;
     color: var(--white) !important;
     font-weight: bold !important;
@@ -94,4 +94,21 @@
         position: absolute !important;
         right: 0% !important;
     }
+
+    .btn-style{
+        width: 2rem !important;
+    }
+
+    .input-tag{
+        top:10vh !important;
+        right: 0% !important;
+        width:90% !important;
+        background-color: var(--white);
+    }
+
+    .badge{
+        top:20% !important;
+        right: 40% !important;
+    }
+    
 }

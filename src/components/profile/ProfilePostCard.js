@@ -1,17 +1,34 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+
+// Context
+import { AuthContext } from "../../context";
+
+// Config
 import { FetchData } from '../../config/functions';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CustomAlert from '../common/CustomAlert'
+
+// Components
+import CustomAlert from '../common/CustomAlert';
 import MyComment from '../common/MyComment';
 import ConfirmationDialog from '../common/ConfirmationDialog';
+
+// MUI
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    Button,
+    CardActionArea,
+    CardActions
+} from '@mui/material';
+
+// MUI Icons
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+// CSS
 import './styles/ProfilePostCard.css'
 
 const ProfilePostCard =
@@ -40,6 +57,9 @@ const ProfilePostCard =
         setSeverityVal
     }) => {
 
+
+        const { token, user } = useContext(AuthContext);
+
         const [readMoreDesc, setReadMoreDesc] = useState('');
         const [show, setShow] = useState("Show More");
         const [showDesc, setShowDesc] = useState(" ... show more");
@@ -60,8 +80,6 @@ const ProfilePostCard =
 
         const navigate = useNavigate();
 
-        const token = localStorage.getItem("userToken");
-        const user = JSON.parse(localStorage.getItem("userData"));
         const authUsername = user.username;
 
         const handleDescLength = () => {
@@ -87,7 +105,7 @@ const ProfilePostCard =
         }
 
         const getUsername = async () => {
-            const url = `http://localhost:5000/getusername/${postedBy}`;
+            const url = `/getusername/${postedBy}`;
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setUsername(response.data.username)
@@ -95,7 +113,7 @@ const ProfilePostCard =
         }
 
         const handleGetUserPostComments = async () => {
-            const url = `http://localhost:5000/getpostcomments/${postId}`;
+            const url = `/getpostcomments/${postId}`;
             const response = await FetchData(url, token, 'GET', null)
             if (response && response.data) {
                 setComments(response.data)
@@ -128,7 +146,7 @@ const ProfilePostCard =
         }
 
         const handleDeleteComment = async () => {
-            const url = `http://localhost:5000/deletecomment/${commentId}/${selectedId}`;
+            const url = `/deletecomment/${commentId}/${selectedId}`;
             const response = await FetchData(url, token, 'DELETE', null)
             if (response && response.data) {
                 setOpen(true)
@@ -304,11 +322,7 @@ const ProfilePostCard =
                                 color="primary"
                                 style={{
                                     textTransform: "lowercase",
-                                    visibility: (comments.length > 1)
-                                        ?
-                                        "visible"
-                                        :
-                                        "hidden"
+                                    visibility: (comments.length > 1) ? "visible" : "hidden"
                                 }}
                             >
                                 {show}
@@ -340,4 +354,4 @@ const ProfilePostCard =
         );
     }
 
-export default ProfilePostCard
+export default ProfilePostCard;
