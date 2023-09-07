@@ -70,7 +70,7 @@ const SignUp = () => {
             setSeverityVal("success");
             setOpen(true);
             // setSignUpData(initialState);
-            navigate('/login');
+            navigate('/');
         }
         else {
             setMessage("Error While Signing Up!");
@@ -138,7 +138,7 @@ const SignUp = () => {
                 </Button>
 
                 <Link
-                    to="/login"
+                    to="/"
                     className='link-style'
                 >
                     Already a User? Login Here
