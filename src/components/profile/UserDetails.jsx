@@ -53,14 +53,14 @@ const UserDetails =
                     setIsRequested(false);
                     setRequestButton("Accept Request");
                 }
-                else if (response.data.requestedId.includes(isAuthId)) {
-                    setIsRequested(false);
-                    setRequestButton("Cancel Request");
-                }
                 else if (response.data.friendsUsername.includes(username)) {
                     setIsRequested(true);
                     setRequestButton("Friend");
                     setIsFriend(true);
+                }
+                else if (response.data.requestedId.includes(isAuthId)) {
+                    setIsRequested(false);
+                    setRequestButton("Cancel Request");
                 }
                 else {
                     setIsRequested(false);

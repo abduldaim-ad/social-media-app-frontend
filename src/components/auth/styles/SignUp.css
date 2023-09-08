@@ -12,6 +12,9 @@
 
 .link-style{
     text-align: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: bold;
 }
 
 .main-div{
